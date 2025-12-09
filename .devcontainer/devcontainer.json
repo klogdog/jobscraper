@@ -1,0 +1,19 @@
+// See https://containers.dev/implementors/json_reference/ for configuration reference
+{
+	"name": "Jobscraper.js project",
+	"build": {
+		"dockerfile": "Dockerfile"
+	},
+"remoteUser": "node",
+"features": {
+	"ghcr.io/devcontainers-extra/features/vue-cli:2": {},
+	"ghcr.io/devcontainers/features/docker-in-docker:2": {}
+},
+"customizations": {
+	"vscode": {
+		"extensions": [
+			"Vue.volar"
+		]
+	}
+}
+}
