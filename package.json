@@ -1,0 +1,23 @@
+{
+  "name": "jobscraper",
+  "version": "1.0.0",
+  "description": "Job scraping service for resume builder automation",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js"
+  },
+  "keywords": ["job", "scraper", "crawler", "indeed"],
+  "author": "klogdog",
+  "license": "MIT",
+  "dependencies": {
+    "pg": "^8.11.0",
+    "node-cron": "^3.0.3",
+    "axios": "^1.6.0",
+    "cheerio": "^1.0.0-rc.12",
+    "dotenv": "^16.3.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.0"
+  }
+}
