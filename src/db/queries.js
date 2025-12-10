@@ -78,7 +78,6 @@ async function markInactive() {
   
   try {
     const result = await pool.query(query);
-    logger.info(`Marked ${result.rowCount} jobs as inactive`);
     return result.rowCount;
   } catch (error) {
     logger.error('Error marking jobs inactive:', error);

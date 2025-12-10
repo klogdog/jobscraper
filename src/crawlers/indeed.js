@@ -101,6 +101,7 @@ class IndeedCrawler {
             jobUrl = `${urlObj.origin}${urlObj.pathname}`;
           } catch (e) {
             // Keep original URL if parsing fails
+            logger.debug(`Failed to parse job URL: ${jobUrl}`, e.message);
           }
         }
         

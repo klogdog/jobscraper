@@ -36,7 +36,8 @@ const logger = {
   },
   
   debug: (message, ...args) => {
-    if (process.env.LOG_LEVEL === 'debug') {
+    const logLevel = process.env.LOG_LEVEL || 'info';
+    if (logLevel === 'debug') {
       console.log(formatMessage(LOG_LEVELS.DEBUG, message, ...args));
     }
   }
