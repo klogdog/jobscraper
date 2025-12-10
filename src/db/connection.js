@@ -1,5 +1,6 @@
 const { Pool } = require('pg');
 const config = require('../config');
+const logger = require('../utils/logger');
 
 const pool = new Pool({
   user: config.database.user,
@@ -14,11 +15,11 @@ const pool = new Pool({
 
 // Test connection on startup
 pool.on('connect', () => {
-  console.log('Database connected');
+  logger.info('Database connected');
 });
 
 pool.on('error', (err) => {
-  console.error('Unexpected database error:', err);
+  logger.error('Unexpected database error:', err);
 });
 
 module.exports = pool;

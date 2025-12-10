@@ -1,4 +1,5 @@
 const pool = require('./connection');
+const logger = require('../utils/logger');
 
 /**
  * Insert or update a job in the repository
@@ -29,7 +30,7 @@ async function upsertJob(jobData) {
     const result = await pool.query(query, values);
     return result.rows[0];
   } catch (error) {
-    console.error('Error upserting job:', error);
+    logger.error('Error upserting job:', error);
     throw error;
   }
 }
@@ -56,7 +57,7 @@ async function searchJobs(keywords, location = '%', limit = 50) {
     const result = await pool.query(query, values);
     return result.rows;
   } catch (error) {
-    console.error('Error searching jobs:', error);
+    logger.error('Error searching jobs:', error);
     throw error;
   }
 }
@@ -77,7 +78,7 @@ async function markInactive() {
     const result = await pool.query(query);
     return result.rowCount;
   } catch (error) {
-    console.error('Error marking jobs inactive:', error);
+    logger.error('Error marking jobs inactive:', error);
     throw error;
   }
 }
