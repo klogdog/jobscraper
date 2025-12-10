@@ -7,15 +7,16 @@ const logger = require('../utils/logger');
  * @returns {Promise<Object>} - Result of the operation
  */
 async function upsertJob(jobData) {
-  const { job_url, title, company, location, keywords, source } = jobData;
+  const { job_url, title, company, location, seniority_level, keywords, source } = jobData;
   
   const query = `
     INSERT INTO job_repository (
-      job_url, title, company, location, keywords, source, last_verified
-    ) VALUES ($1, $2, $3, $4, $5, $6, NOW())
+      job_url, title, company, location, seniority_level, keywords, source, last_verified
+    ) VALUES ($1, $2, $3, $4, $5, $6, $7, NOW())
     ON CONFLICT (job_url) DO UPDATE SET
       last_verified = NOW(),
       is_active = true,
+      seniority_level = EXCLUDED.seniority_level,
       keywords = EXCLUDED.keywords
     RETURNING id;
   `;
@@ -26,6 +27,7 @@ async function upsertJob(jobData) {
       title,
       company,
       location,
+      seniority_level,
       keywords,
       source
     ]);
