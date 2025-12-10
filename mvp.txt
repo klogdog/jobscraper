@@ -1,0 +1,730 @@
+================================================================================
+JOB DISCOVERY & SCRAPING SERVICE - MVP PLAN
+================================================================================
+Project: Job Scraper Microservice for Resume Builder Auto
+Date: December 10, 2025
+Owner: klogdog
+
+MVP Goal: Build a working job discovery bot that can crawl one job board,
+store job metadata, and integrate with the resume tuner for on-demand scraping.
+Timeline: 2-3 weeks
+
+================================================================================
+MVP SCOPE
+================================================================================
+
+IN SCOPE:
+  ✓ Single job board crawler (Indeed.com)
+  ✓ Basic job repository storage (PostgreSQL)
+  ✓ On-demand job scraping for resume tuning
+  ✓ Simple scheduler (runs daily)
+  ✓ Basic error handling and logging
+  ✓ Docker containerization
+  ✓ API endpoints for job search and scraping
+
+OUT OF SCOPE (Post-MVP):
+  ✗ LinkedIn, Greenhouse, Lever crawlers
+  ✗ Advanced anti-blocking (proxy rotation, etc.)
+  ✗ User analytics tracking
+  ✗ Email alerts and monitoring dashboard
+  ✗ Cloud deployment (GCP/AWS)
+  ✗ CI/CD pipeline
+  ✗ Comprehensive testing suite
+  ✗ ML-based job recommendations
+
+================================================================================
+MVP PHASE 1: PROJECT SETUP (Days 1-2)
+================================================================================
+
+1.1 Initialize Project
+-----------------------
+□ Create Node.js project
+  npm init -y
+
+□ Install core dependencies only:
+  npm install pg node-cron axios cheerio dotenv
+
+□ Install dev dependencies:
+  npm install --save-dev nodemon
+
+□ Create basic directory structure:
+  src/
+  ├── index.js                    # Main entry point
+  ├── config.js                   # Configuration
+  ├── db/
+  │   ├── connection.js           # PostgreSQL connection
+  │   ├── schema.sql              # Database schema
+  │   └── queries.js              # SQL queries
+  ├── crawlers/
+  │   └── indeed.js               # Indeed crawler only
+  └── utils/
+      ├── logger.js               # Console logger (simple)
+      └── keywords.js             # Keyword extraction
+
+□ Create .env.example:
+  DB_USER=postgres
+  DB_PASSWORD=password
+  DB_NAME=resumebuilder
+  DB_HOST=localhost
+  DB_PORT=5432
+  NODE_ENV=development
+
+□ Create .gitignore:
+  node_modules/
+  .env
+  logs/
+  *.log
+
+1.2 Database Setup
+------------------
+□ Create minimal schema (src/db/schema.sql):
+  - job_repository table only (skip job_postings, user_searches, logs)
+  - Essential fields: id, job_url, title, company, location, keywords,
+    source, is_active, last_verified, created_at
+  - Basic indexes: job_url (unique), is_active, keywords (GIN)
+
+□ Create connection.js:
+  - Simple pg.Pool configuration
+  - Local PostgreSQL connection only (no Cloud SQL)
+  - Basic error handling
+
+□ Create queries.js:
+  - upsertJob() - Insert or update job
+  - searchJobs() - Search by keywords
+  - markInactive() - Cleanup old jobs
+
+1.3 Configuration
+-----------------
+□ Create config.js:
+  - Load environment variables
+  - Define search parameters (hardcoded for MVP):
+    * keywords: ["software engineer", "full stack developer"]
+    * locations: ["Remote"]
+    * maxPages: 2
+  - Crawl schedule: "0 9 * * *" (daily at 9 AM)
+
+================================================================================
+MVP PHASE 2: CORE UTILITIES (Days 2-3)
+================================================================================
+
+2.1 Simple Logger (src/utils/logger.js)
+----------------------------------------
+□ Implement basic console logger:
+  - info(), error(), debug() methods
+  - Timestamp prefix
+  - No file logging (console only for MVP)
+
+Example:
+  logger.info('Starting crawler...');
+  logger.error('Failed to fetch page', error);
+
+2.2 Keyword Extractor (src/utils/keywords.js)
+----------------------------------------------
+□ Create simple keyword dictionary:
+  - 20-30 most common tech keywords
+  - Languages: javascript, typescript, python, java, go
+  - Frontend: react, vue, angular
+  - Backend: node, express, django
+  - Cloud: aws, azure, docker, kubernetes
+
+□ Implement extractKeywords(text):
+  - Case-insensitive matching
+  - Return array of matched keywords
+  - No NLP, just string matching
+
+□ Implement detectSeniority(title):
+  - Entry: contains "junior", "jr", "entry"
+  - Senior: contains "senior", "sr", "lead", "staff"
+  - Default: "mid"
+
+================================================================================
+MVP PHASE 3: INDEED CRAWLER (Days 3-5)
+================================================================================
+
+3.1 Implement Indeed Crawler (src/crawlers/indeed.js)
+------------------------------------------------------
+□ Create IndeedCrawler class:
+  async crawl(searchParams)
+
+□ Build search URL:
+  - Base: https://www.indeed.com/jobs
+  - Params: q (keywords), l (location)
+  - Example: /jobs?q=software+engineer&l=Remote
+
+□ Fetch and parse search results:
+  - Use axios to fetch HTML
+  - Use cheerio to parse
+  - Extract job cards (2 pages max)
+
+□ Extract job data:
+  - Title: h2.jobTitle span
+  - Company: .companyName
+  - Location: .companyLocation
+  - URL: h2.jobTitle a[href] (convert to absolute URL)
+
+□ Process each job:
+  - Extract keywords from title
+  - Detect seniority level
+  - Save to database via upsertJob()
+
+□ Basic rate limiting:
+  - 3 second delay between page requests
+  - Simple setTimeout()
+
+□ Error handling:
+  - Try/catch around each page fetch
+  - Log errors but continue
+  - Return count of jobs found
+
+3.2 Selectors Reference
+------------------------
+Update these if Indeed changes HTML structure:
+  - Job card: '.resultContent' or '.job_seen_beacon'
+  - Title: 'h2.jobTitle span' or '.jobTitle'
+  - Company: '.companyName'
+  - Location: '.companyLocation'
+  - Job link: 'h2.jobTitle a'
+
+================================================================================
+MVP PHASE 4: SCHEDULER (Days 5-6)
+================================================================================
+
+4.1 Main Entry Point (src/index.js)
+------------------------------------
+□ Initialize application:
+  - Load config
+  - Test database connection
+  - Log startup info
+
+□ Implement runCrawler():
+  async function runCrawler() {
+    logger.info('Starting crawler job...');
+    
+    const crawler = new IndeedCrawler();
+    const searchParams = {
+      keywords: config.searchKeywords,
+      locations: config.searchLocations,
+      maxPages: 2
+    };
+    
+    try {
+      const jobsFound = await crawler.crawl(searchParams);
+      logger.info(`Crawl completed. Jobs found: ${jobsFound}`);
+    } catch (error) {
+      logger.error('Crawl failed', error);
+    }
+  }
+
+□ Set up scheduler:
+  const cron = require('node-cron');
+  
+  // Run daily at 9 AM
+  cron.schedule('0 9 * * *', runCrawler);
+  
+  // Run once on startup for testing
+  runCrawler();
+
+□ Keep process alive:
+  logger.info('Scheduler started. Press Ctrl+C to exit.');
+
+4.2 Cleanup Job
+---------------
+□ Implement daily cleanup:
+  async function cleanupOldJobs() {
+    // Mark jobs inactive if not seen in 7 days
+    await markInactive();
+    logger.info('Cleanup completed');
+  }
+  
+  cron.schedule('0 2 * * *', cleanupOldJobs);
+
+================================================================================
+MVP PHASE 5: DATABASE INTEGRATION (Day 6-7)
+================================================================================
+
+5.1 Implement Database Queries (src/db/queries.js)
+---------------------------------------------------
+□ upsertJob(jobData):
+  INSERT INTO job_repository (
+    job_url, title, company, location, keywords, source, last_verified
+  ) VALUES ($1, $2, $3, $4, $5, $6, NOW())
+  ON CONFLICT (job_url) DO UPDATE SET
+    last_verified = NOW(),
+    is_active = true;
+
+□ searchJobs(keywords, location, limit):
+  SELECT * FROM job_repository
+  WHERE is_active = true
+    AND keywords && $1::text[]
+    AND location ILIKE $2
+  ORDER BY last_verified DESC
+  LIMIT $3;
+
+□ markInactive():
+  UPDATE job_repository
+  SET is_active = false
+  WHERE last_verified < NOW() - INTERVAL '7 days'
+    AND is_active = true;
+
+5.2 Test Database Operations
+-----------------------------
+□ Create test script (test-db.js):
+  - Connect to database
+  - Insert test job
+  - Search for jobs
+  - Verify results
+
+□ Run: node test-db.js
+
+================================================================================
+MVP PHASE 6: API ENDPOINTS (Days 7-9)
+================================================================================
+
+Note: These endpoints go in the MAIN resumeBuilderAuto repository,
+not in the job-discovery-bot. The bot only writes to the database.
+
+6.1 Create Job Routes (resumeBuilderAuto/server/routes/jobs.js)
+----------------------------------------------------------------
+□ GET /api/jobs/search
+  Query params: keywords, location, limit
+  Returns: Array of job listings from job_repository
+
+  Implementation:
+    router.get('/search', async (req, res) => {
+      const { keywords, location, limit = 50 } = req.query;
+      const keywordArray = keywords.split(',');
+      const jobs = await searchJobs(keywordArray, location, limit);
+      res.json({ jobs, total: jobs.length });
+    });
+
+□ POST /api/jobs/scrape
+  Body: { url, job_repo_id }
+  Returns: Full job details
+
+  Implementation:
+    router.post('/scrape', async (req, res) => {
+      const { url } = req.body;
+      
+      // Use existing scraper service
+      const jobDetails = await scrapeJobPosting(url);
+      
+      res.json({ job: jobDetails });
+    });
+
+6.2 Update Existing Scraper (resumeBuilderAuto/server/services/scraper.js)
+---------------------------------------------------------------------------
+□ Enhance scrapeJobPosting(url):
+  - Detect job board from URL (Indeed, Greenhouse, etc.)
+  - Use appropriate selectors
+  - Extract: description, requirements, responsibilities
+  - Return structured object
+
+□ Basic selectors for Indeed:
+  - Description: '#jobDescriptionText' or '.jobsearch-JobComponent-description'
+  - Use Cheerio for parsing (no Puppeteer for MVP)
+
+6.3 Register Routes
+-------------------
+□ Add to resumeBuilderAuto/server/index.js:
+  const jobRoutes = require('./routes/jobs');
+  app.use('/api/jobs', jobRoutes);
+
+================================================================================
+MVP PHASE 7: TESTING (Days 9-10)
+================================================================================
+
+7.1 Manual Testing
+------------------
+□ Test crawler:
+  - Run: node src/index.js
+  - Verify jobs are saved to database
+  - Check logs for errors
+  - Confirm rate limiting works (3s delay)
+
+□ Test database:
+  - psql: SELECT COUNT(*) FROM job_repository;
+  - Verify job data is complete
+  - Check keywords are extracted
+
+□ Test search API:
+  curl "http://localhost:3000/api/jobs/search?keywords=react,node&location=Remote"
+  - Verify results returned
+  - Check keyword filtering works
+
+□ Test scrape API:
+  curl -X POST http://localhost:3000/api/jobs/scrape \
+    -H "Content-Type: application/json" \
+    -d '{"url":"https://www.indeed.com/viewjob?jk=xxx"}'
+  - Verify full job description returned
+  - Check parsing quality
+
+7.2 Basic Unit Tests (Optional for MVP)
+----------------------------------------
+□ Test keyword extraction:
+  - Input: "Senior React Developer"
+  - Output: ["react"], seniority: "senior"
+
+□ Test database queries:
+  - Mock connection
+  - Verify SQL is correct
+
+================================================================================
+MVP PHASE 8: DOCKERIZATION (Days 10-11)
+================================================================================
+
+8.1 Create Dockerfile
+----------------------
+□ Simple Dockerfile:
+  FROM node:18-alpine
+  WORKDIR /app
+  COPY package*.json ./
+  RUN npm ci --only=production
+  COPY src ./src
+  CMD ["node", "src/index.js"]
+
+8.2 Create docker-compose.yml
+------------------------------
+□ Local development stack:
+  version: '3.8'
+  services:
+    job-bot:
+      build: .
+      env_file: .env
+      depends_on:
+        - postgres
+      restart: unless-stopped
+    
+    postgres:
+      image: postgres:15-alpine
+      environment:
+        POSTGRES_DB: resumebuilder
+        POSTGRES_USER: postgres
+        POSTGRES_PASSWORD: password
+      ports:
+        - "5432:5432"
+      volumes:
+        - postgres-data:/var/lib/postgresql/data
+        - ./src/db/schema.sql:/docker-entrypoint-initdb.d/schema.sql
+  
+  volumes:
+    postgres-data:
+
+8.3 Test Docker Setup
+----------------------
+□ Build and run:
+  docker-compose up --build
+
+□ Verify:
+  - Bot starts successfully
+  - Database connection works
+  - Crawler runs
+  - Jobs are saved
+
+================================================================================
+MVP PHASE 9: DOCUMENTATION (Days 11-12)
+================================================================================
+
+9.1 README.md
+-------------
+□ Project overview
+□ Setup instructions:
+  - Install dependencies
+  - Configure environment variables
+  - Run database migrations
+  - Start the bot
+
+□ Docker instructions:
+  - docker-compose up
+
+□ API documentation:
+  - GET /api/jobs/search
+  - POST /api/jobs/scrape
+
+9.2 .env.example
+----------------
+□ Document all environment variables
+□ Provide example values
+
+9.3 Code Comments
+-----------------
+□ Add comments to complex logic
+□ Document function parameters
+□ Explain crawler selectors
+
+================================================================================
+MVP FEATURE CHECKLIST
+================================================================================
+
+CORE FEATURES:
+  □ Indeed crawler extracts job listings
+  □ Jobs saved to PostgreSQL job_repository table
+  □ Keyword extraction from job titles
+  □ Seniority level detection
+  □ Daily crawler schedule (9 AM)
+  □ Daily cleanup (mark old jobs inactive)
+  □ GET /api/jobs/search endpoint
+  □ POST /api/jobs/scrape endpoint
+  □ Basic logging (console)
+  □ Rate limiting (3s delay)
+  □ Docker container for bot
+  □ Docker Compose for local dev
+
+QUALITY:
+  □ Error handling (try/catch)
+  □ Database connection pooling
+  □ Environment variable configuration
+  □ README with setup instructions
+  □ Manual testing completed
+
+================================================================================
+MVP DELIVERABLES
+================================================================================
+
+1. job-discovery-bot repository:
+   - src/ folder with crawler, db, utils
+   - Dockerfile
+   - docker-compose.yml
+   - package.json
+   - README.md
+   - .env.example
+
+2. resumeBuilderAuto repository updates:
+   - server/routes/jobs.js (new file)
+   - server/services/scraper.js (enhanced)
+   - Database schema update (job_repository table)
+
+3. Working features:
+   - Crawler discovers 50-100 jobs per day from Indeed
+   - Jobs searchable via API
+   - On-demand scraping for resume tuning
+   - Runs in Docker container
+
+================================================================================
+MVP SUCCESS CRITERIA
+================================================================================
+
+Technical:
+  □ Crawler runs successfully without crashes
+  □ At least 50 jobs discovered per crawl
+  □ Database stores jobs correctly
+  □ Search API returns results in < 500ms
+  □ Scrape API succeeds for 80%+ of URLs
+  □ Docker stack runs without errors
+
+Functional:
+  □ User can search for jobs by keyword and location
+  □ User can scrape full job details for resume tuning
+  □ Jobs are automatically marked inactive after 7 days
+  □ No duplicate jobs in database
+
+Quality:
+  □ No critical bugs
+  □ Basic error handling works
+  □ Logs provide useful debugging info
+  □ Code is readable and commented
+
+================================================================================
+POST-MVP ROADMAP (Priority Order)
+================================================================================
+
+Week 4-5: Add More Job Sources
+  □ LinkedIn crawler (Puppeteer-based)
+  □ Greenhouse crawler
+  □ Lever crawler
+
+Week 5-6: Enhanced Features
+  □ Advanced keyword extraction (NLP)
+  □ Better seniority detection
+  □ Job type classification (full-time, contract, etc.)
+  □ Posted date extraction
+
+Week 6-7: Monitoring & Reliability
+  □ Winston file logging
+  □ Health check endpoint
+  □ Crawler metrics dashboard
+  □ Email alerts for failures
+
+Week 7-8: Anti-Blocking
+  □ User agent rotation
+  □ robots.txt compliance
+  □ Proxy support (optional)
+  □ Exponential backoff
+
+Week 8-9: Testing & Quality
+  □ Unit tests (Jest)
+  □ Integration tests
+  □ E2E crawler tests
+  □ Code coverage > 70%
+
+Week 9-10: Cloud Deployment
+  □ Cloud SQL setup
+  □ Cloud Run deployment
+  □ Environment configuration
+  □ CI/CD pipeline (GitHub Actions)
+
+Week 10+: Advanced Features
+  □ User job alerts
+  □ Job recommendations
+  □ Analytics dashboard
+  □ Salary data extraction
+
+================================================================================
+MVP RISK MITIGATION
+================================================================================
+
+Risk: Indeed blocks crawler
+Mitigation:
+  - Keep crawl frequency low (once per day)
+  - Respect rate limits (3s delay)
+  - Use realistic user agent
+  - Start with small page count (2 pages)
+  - Monitor for 429/403 errors
+
+Risk: HTML selectors break
+Mitigation:
+  - Document selectors clearly
+  - Test regularly
+  - Add error logging for parsing failures
+  - Have fallback selectors
+
+Risk: Database grows too large
+Mitigation:
+  - Start with 7-day retention
+  - Monitor database size
+  - Implement cleanup job
+  - Archive old data if needed
+
+Risk: Scraper fails for some URLs
+Mitigation:
+  - Return error message to user
+  - Log failed URLs for investigation
+  - Focus on Indeed URLs first (most common)
+  - Add fallback parsing logic
+
+================================================================================
+MVP DEVELOPMENT TIMELINE
+================================================================================
+
+Day 1-2:   Project setup, database schema
+Day 3-5:   Indeed crawler implementation
+Day 5-6:   Scheduler and main entry point
+Day 6-7:   Database integration and testing
+Day 7-9:   API endpoints in resume tuner
+Day 9-10:  Manual testing and bug fixes
+Day 10-11: Docker setup and testing
+Day 11-12: Documentation and cleanup
+
+TOTAL: 12 days (2-3 weeks with buffer)
+
+================================================================================
+MVP RESOURCE REQUIREMENTS
+================================================================================
+
+Development:
+  - 1 Backend Developer (full-time, 2-3 weeks)
+
+Infrastructure (Local):
+  - PostgreSQL (Docker container)
+  - Node.js 18+
+  - Docker & Docker Compose
+
+No cloud costs for MVP (runs locally)
+
+================================================================================
+MVP ASSUMPTIONS
+================================================================================
+
+1. Resume Builder Auto already has:
+   - PostgreSQL database
+   - Express.js server
+   - Basic scraper service (can be enhanced)
+
+2. Developer has access to:
+   - PostgreSQL (local or remote)
+   - Docker for containerization
+   - Indeed.com (publicly accessible)
+
+3. Legal/Ethical:
+   - Indeed.com allows scraping for personal use
+   - Crawler respects rate limits
+   - Data used only for resume tuning (not redistribution)
+
+4. Technical:
+   - Indeed's HTML structure is parseable
+   - No CAPTCHA for low-volume requests
+   - PostgreSQL can handle 10k+ job records
+
+================================================================================
+MVP LAUNCH CHECKLIST
+================================================================================
+
+Pre-Launch:
+  □ Code review completed
+  □ Manual testing passed
+  □ Docker build successful
+  □ Database schema deployed
+  □ Environment variables configured
+  □ README documentation complete
+
+Launch:
+  □ Start Docker Compose stack
+  □ Run initial crawler manually
+  □ Verify jobs in database
+  □ Test search API
+  □ Test scrape API
+  □ Monitor logs for errors
+
+Post-Launch (Week 1):
+  □ Check daily crawler runs
+  □ Monitor job count growth
+  □ Review error logs
+  □ Test resume tuning integration
+  □ Collect user feedback
+
+Post-Launch (Week 2):
+  □ Analyze crawler success rate
+  □ Review job data quality
+  □ Identify missing keywords
+  □ Plan next features
+
+================================================================================
+MVP COMPLETION DEFINITION
+================================================================================
+
+The MVP is complete when:
+
+1. A user can search for jobs via API using keywords and location
+2. Search returns jobs discovered by the Indeed crawler
+3. User can scrape full job details for any job URL
+4. Crawler runs automatically once per day
+5. Old jobs are automatically marked inactive after 7 days
+6. System runs in Docker containers without manual intervention
+7. Basic error handling prevents crashes
+8. README provides clear setup instructions
+
+================================================================================
+NEXT STEPS AFTER MVP
+================================================================================
+
+1. Deploy MVP to production (Cloud Run or similar)
+2. Monitor crawler performance for 1 week
+3. Gather user feedback on job quality
+4. Prioritize Post-MVP features based on usage
+5. Add second job source (LinkedIn or Greenhouse)
+6. Implement monitoring and alerting
+7. Set up CI/CD pipeline
+
+================================================================================
+CONTACT
+================================================================================
+
+Project Owner: klogdog
+Repository: github.com/klogdog/jobscraper
+Related Repo: github.com/klogdog/resumeBuilderAuto
+
+For questions about MVP scope or implementation, refer to this document
+or the full implementation plan (plan.txt).
+
+================================================================================
+END OF MVP PLAN
+================================================================================

@@ -1,0 +1,1246 @@
+================================================================================
+JOB DISCOVERY & SCRAPING SERVICE - IMPLEMENTATION PLAN
+================================================================================
+Project: Job Scraper Microservice for Resume Builder Auto
+Date: December 10, 2025
+Owner: klogdog
+
+================================================================================
+PHASE 1: PROJECT SETUP & DATABASE (Week 1)
+================================================================================
+
+1.1 Repository & Environment Setup
+-----------------------------------
+□ Initialize Node.js project structure
+  - package.json with dependencies
+  - ESLint and Prettier configuration
+  - .gitignore (node_modules, .env, logs)
+  - .env.example template
+
+□ Create directory structure:
+  job-discovery-bot/
+  ├── src/
+  │   ├── index.js                    # Main scheduler entry point
+  │   ├── config/
+  │   │   └── index.js                # Configuration loader
+  │   ├── db/
+  │   │   ├── index.js                # PostgreSQL connection pool
+  │   │   ├── schema.sql              # Database schema definitions
+  │   │   └── queries.js              # Reusable SQL queries
+  │   ├── crawlers/
+  │   │   ├── base.js                 # Abstract crawler class
+  │   │   ├── indeed.js               # Indeed crawler
+  │   │   ├── linkedin.js             # LinkedIn crawler
+  │   │   ├── greenhouse.js           # Greenhouse ATS crawler
+  │   │   └── lever.js                # Lever ATS crawler
+  │   ├── services/
+  │   │   ├── scheduler.js            # Cron job management
+  │   │   ├── keyword-extractor.js   # Tech keyword extraction
+  │   │   └── seniority-detector.js  # Job level inference
+  │   └── utils/
+  │       ├── logger.js               # Winston logger
+  │       ├── rate-limiter.js         # Request rate limiting
+  │       └── user-agents.js          # User agent rotation
+  ├── tests/
+  │   ├── unit/
+  │   └── integration/
+  ├── logs/
+  ├── Dockerfile
+  ├── docker-compose.yml
+  ├── .dockerignore
+  └── README.md
+
+1.2 Install Dependencies
+-------------------------
+Core Dependencies:
+  □ pg (^8.11.0) - PostgreSQL client
+  □ node-cron (^3.0.3) - Job scheduling
+  □ axios (^1.6.0) - HTTP client
+  □ cheerio (^1.0.0-rc.12) - HTML parsing
+  □ puppeteer (^21.0.0) - Headless browser
+  □ dotenv (^16.3.0) - Environment variables
+  □ winston (^3.11.0) - Logging
+  □ robots-parser (^3.0.0) - robots.txt parsing
+
+Dev Dependencies:
+  □ nodemon (^3.0.0) - Development server
+  □ jest (^29.7.0) - Testing framework
+  □ eslint (^8.50.0) - Code linting
+  □ prettier (^3.0.0) - Code formatting
+
+1.3 Database Schema Implementation
+-----------------------------------
+□ Create schema.sql with all tables:
+  - job_repository (main job index)
+  - job_postings (full job details cache)
+  - user_job_searches (analytics)
+  - crawler_logs (monitoring table)
+
+□ Add indexes:
+  - idx_job_repo_active ON job_repository(is_active)
+  - idx_job_repo_keywords GIN ON job_repository(keywords)
+  - idx_job_repo_company ON job_repository(company)
+  - idx_job_postings_url ON job_postings(url)
+  - idx_job_postings_repo_id ON job_postings(job_repo_id)
+
+□ Create migration scripts:
+  - 001_initial_schema.sql
+  - 002_add_indexes.sql
+
+□ Set up database connection pool (src/db/index.js):
+  - Connection pooling (max: 20, idle timeout: 30s)
+  - Cloud SQL socket support for production
+  - TCP connection for local development
+  - Connection error handling and retries
+
+1.4 Configuration Management
+-----------------------------
+□ Create config/index.js with:
+  - Database credentials (from env vars)
+  - Crawl schedules (configurable cron expressions)
+  - Rate limiting settings (requests per minute)
+  - Search parameters (keywords, locations)
+  - Timeout settings
+  - Logging levels
+
+□ Environment variables (.env.example):
+  DB_USER=postgres
+  DB_PASSWORD=password
+  DB_NAME=resumebuilder
+  DB_HOST=localhost
+  DB_PORT=5432
+  INSTANCE_CONNECTION_NAME=project:region:instance
+  NODE_ENV=development
+  CRAWL_INTERVAL=0 */6 * * *
+  CLEANUP_INTERVAL=0 2 * * *
+  RATE_LIMIT_DELAY=3000
+  LOG_LEVEL=info
+
+================================================================================
+PHASE 2: CORE UTILITIES & SERVICES (Week 1-2)
+================================================================================
+
+2.1 Logging System (src/utils/logger.js)
+-----------------------------------------
+□ Configure Winston logger:
+  - Console transport (development)
+  - File transport (logs/app.log)
+  - Error file transport (logs/error.log)
+  - JSON format for production
+  - Timestamp and level formatting
+
+□ Log levels:
+  - error: Crawl failures, DB errors
+  - warn: Rate limit hits, missing data
+  - info: Crawl start/end, jobs discovered
+  - debug: Individual job processing
+
+2.2 Rate Limiter (src/utils/rate-limiter.js)
+---------------------------------------------
+□ Implement rate limiting:
+  - Configurable delay between requests (2-5 seconds)
+  - Exponential backoff on errors
+  - Per-domain rate limiting
+  - Queue management for concurrent requests
+
+□ Features:
+  - async sleep() utility
+  - Request queue with priority
+  - Retry logic (max 3 attempts)
+  - Timeout handling
+
+2.3 User Agent Rotation (src/utils/user-agents.js)
+---------------------------------------------------
+□ Create user agent pool:
+  - 10-15 realistic user agent strings
+  - Random selection for each request
+  - Browser version variation
+  - Platform diversity (Windows, Mac, Linux)
+
+□ Example agents:
+  - Chrome on Windows 10/11
+  - Firefox on Mac
+  - Safari on Mac
+  - Edge on Windows
+
+2.4 Keyword Extractor (src/services/keyword-extractor.js)
+----------------------------------------------------------
+□ Build keyword dictionary:
+  - Languages: JavaScript, TypeScript, Python, Java, Go, Rust, etc.
+  - Frontend: React, Vue, Angular, Next.js, Svelte
+  - Backend: Node, Express, Django, Flask, Spring Boot
+  - Databases: PostgreSQL, MySQL, MongoDB, Redis
+  - Cloud: AWS, GCP, Azure, Kubernetes, Docker
+  - Mobile: React Native, Flutter, Swift, Kotlin
+  - Data: Spark, Hadoop, Kafka, Airflow
+  - ML/AI: TensorFlow, PyTorch, scikit-learn
+
+□ Implement extraction logic:
+  function extractKeywords(text)
+  - Case-insensitive matching
+  - Whole word matching (avoid false positives)
+  - Return unique keywords array
+  - Handle variations (e.g., "react.js" → "react")
+
+2.5 Seniority Detector (src/services/seniority-detector.js)
+------------------------------------------------------------
+□ Implement inference rules:
+  function detectSeniority(title)
+  - Entry level: junior, jr, entry, associate, 0-2 years
+  - Mid level: engineer, developer (no modifiers)
+  - Senior level: senior, sr, lead, staff, principal
+  - Management: manager, director, vp, head of
+
+□ Return standardized values:
+  - "entry", "mid", "senior", "staff", "management"
+
+================================================================================
+PHASE 3: BASE CRAWLER FRAMEWORK (Week 2)
+================================================================================
+
+3.1 Abstract Base Crawler (src/crawlers/base.js)
+-------------------------------------------------
+□ Create BaseCrawler class:
+  class BaseCrawler {
+    constructor(name, config)
+    async crawl(searchParams, saveCallback)
+    async fetchPage(url)
+    async parsePage(html, url)
+    async handlePagination(baseUrl, maxPages)
+    checkRobotsTxt(url)
+    getRateLimitDelay()
+  }
+
+□ Implement common functionality:
+  - robots.txt checking
+  - Rate limiting integration
+  - User agent rotation
+  - Error handling and logging
+  - Retry logic
+  - Response caching (optional)
+
+□ Abstract methods (to be implemented by subclasses):
+  - parsePage(html, url) - Extract job listings
+  - buildSearchUrl(params) - Construct search URL
+  - extractJobData(element) - Parse job card
+
+3.2 Crawler Interface
+----------------------
+□ Define standard searchParams structure:
+  {
+    keywords: string[],      // ["software engineer", "full stack"]
+    locations: string[],     // ["Remote", "San Francisco"]
+    jobTypes: string[],      // ["full-time", "contract"]
+    maxPages: number         // Default: 3
+  }
+
+□ Define jobData structure:
+  {
+    url: string,             // Unique job posting URL
+    title: string,           // Job title
+    company: string,         // Company name
+    location: string,        // Location
+    jobType: string,         // Employment type
+    seniorityLevel: string,  // Detected level
+    keywords: string[],      // Extracted keywords
+    source: string,          // Crawler name
+    postedDate: Date|null    // If available
+  }
+
+□ Define saveCallback signature:
+  async function saveCallback(jobData)
+  - Validates required fields
+  - Calls database insert/update
+  - Returns success/failure
+
+================================================================================
+PHASE 4: CRAWLER IMPLEMENTATIONS (Week 2-3)
+================================================================================
+
+4.1 Indeed Crawler (src/crawlers/indeed.js)
+--------------------------------------------
+□ Extends BaseCrawler
+□ Implement buildSearchUrl():
+  - Base: https://www.indeed.com/jobs
+  - Query params: q, l, jt, fromage
+  - Example: /jobs?q=software+engineer&l=Remote&jt=fulltime
+
+□ Implement parsePage():
+  - Select job cards: .job_seen_beacon or .resultContent
+  - Extract: title, company, location, URL
+  - Handle relative URLs (convert to absolute)
+  - Extract posted date (e.g., "Posted 2 days ago")
+
+□ Implement pagination:
+  - Check for "Next" button or page links
+  - Max 3-5 pages per search
+  - URL format: &start=10, &start=20, etc.
+
+□ Selectors (update as needed):
+  - Job card: '.resultContent'
+  - Title: 'h2.jobTitle span'
+  - Company: '.companyName'
+  - Location: '.companyLocation'
+  - Job URL: 'h2.jobTitle a[href]'
+  - Posted date: '.date'
+
+4.2 LinkedIn Crawler (src/crawlers/linkedin.js)
+------------------------------------------------
+□ Extends BaseCrawler
+□ Challenge: LinkedIn heavily JavaScript-rendered
+  - Use Puppeteer for rendering
+  - Wait for job cards to load
+  - Handle lazy loading (scroll events)
+
+□ Implement buildSearchUrl():
+  - Base: https://www.linkedin.com/jobs/search/
+  - Query params: keywords, location, f_JT (job type)
+
+□ Implement parsePage() with Puppeteer:
+  - Launch headless browser
+  - Navigate to search URL
+  - Wait for selector: '.jobs-search__results-list li'
+  - Extract job data from DOM
+  - Close browser
+
+□ Selectors (update as needed):
+  - Job card: '.job-card-container'
+  - Title: '.job-card-list__title'
+  - Company: '.job-card-container__company-name'
+  - Location: '.job-card-container__metadata-item'
+
+□ Anti-blocking measures:
+  - Randomize viewport size
+  - Add mouse movements (optional)
+  - Limit concurrent browser instances (max 2-3)
+
+4.3 Greenhouse Crawler (src/crawlers/greenhouse.js)
+----------------------------------------------------
+□ Extends BaseCrawler
+□ Strategy: Crawl company-specific Greenhouse boards
+  - Requires list of companies using Greenhouse
+  - URL format: company.greenhouse.io/jobs
+
+□ Implement for popular companies:
+  - Stripe, Airbnb, Shopify, etc.
+  - Store company list in config
+
+□ Implement parsePage():
+  - Select job listings: '.opening'
+  - Extract: title, location, department
+  - Company name from URL subdomain
+
+□ Selectors:
+  - Job card: '.opening'
+  - Title: '.opening a'
+  - Location: '.location'
+  - Department: '.department'
+
+□ API option (if available):
+  - Check for public API endpoint
+  - Parse JSON instead of HTML
+
+4.4 Lever Crawler (src/crawlers/lever.js)
+------------------------------------------
+□ Extends BaseCrawler
+□ Similar to Greenhouse (company-specific)
+  - URL format: jobs.lever.co/company
+
+□ Implement parsePage():
+  - Select job postings: '.posting'
+  - Extract: title, location, team
+  - Company name from URL
+
+□ Selectors:
+  - Job card: '.posting'
+  - Title: '.posting-title h5'
+  - Location: '.posting-categories .location'
+  - Team: '.posting-categories .team'
+
+================================================================================
+PHASE 5: DATABASE OPERATIONS (Week 3)
+================================================================================
+
+5.1 Database Queries (src/db/queries.js)
+-----------------------------------------
+□ Implement upsert for job_repository:
+  INSERT INTO job_repository (
+    job_url, title, company, location, job_type,
+    seniority_level, keywords, source, posted_date, last_verified
+  ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, NOW())
+  ON CONFLICT (job_url) DO UPDATE SET
+    last_verified = NOW(),
+    is_active = true,
+    keywords = EXCLUDED.keywords;
+
+□ Implement mark inactive jobs:
+  UPDATE job_repository
+  SET is_active = false
+  WHERE last_verified < NOW() - INTERVAL '7 days'
+    AND is_active = true;
+
+□ Implement search query:
+  SELECT * FROM job_repository
+  WHERE is_active = true
+    AND keywords && $1::text[]  -- Array overlap operator
+    AND location ILIKE $2
+    AND job_type = $3
+  ORDER BY posted_date DESC
+  LIMIT $4;
+
+□ Implement insert job_postings:
+  INSERT INTO job_postings (
+    job_repo_id, url, title, company, location,
+    description, requirements, responsibilities, salary_range
+  ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+  ON CONFLICT (url) DO NOTHING
+  RETURNING id;
+
+□ Implement logging queries:
+  INSERT INTO crawler_logs (
+    crawler_name, status, jobs_found, error_message, started_at, completed_at
+  ) VALUES ($1, $2, $3, $4, $5, $6);
+
+5.2 Database Connection (src/db/index.js)
+------------------------------------------
+□ Implement connection pool:
+  const { Pool } = require('pg');
+  
+  const pool = new Pool({
+    user: process.env.DB_USER,
+    host: process.env.DB_HOST,
+    database: process.env.DB_NAME,
+    password: process.env.DB_PASSWORD,
+    port: process.env.DB_PORT,
+    max: 20,
+    idleTimeoutMillis: 30000,
+    connectionTimeoutMillis: 2000
+  });
+
+□ Cloud SQL socket support:
+  if (process.env.INSTANCE_CONNECTION_NAME) {
+    pool = new Pool({
+      user: process.env.DB_USER,
+      password: process.env.DB_PASSWORD,
+      database: process.env.DB_NAME,
+      host: `/cloudsql/${process.env.INSTANCE_CONNECTION_NAME}`
+    });
+  }
+
+□ Connection health check:
+  async function testConnection() {
+    const client = await pool.connect();
+    await client.query('SELECT NOW()');
+    client.release();
+  }
+
+□ Graceful shutdown:
+  process.on('SIGTERM', async () => {
+    await pool.end();
+  });
+
+================================================================================
+PHASE 6: SCHEDULER & COORDINATION (Week 3-4)
+================================================================================
+
+6.1 Scheduler Service (src/services/scheduler.js)
+--------------------------------------------------
+□ Implement cron jobs using node-cron:
+  const cron = require('node-cron');
+  
+  // Job discovery every 6 hours
+  cron.schedule('0 */6 * * *', async () => {
+    await runCrawlers();
+  });
+  
+  // Cleanup daily at 2 AM
+  cron.schedule('0 2 * * *', async () => {
+    await cleanupOldJobs();
+  });
+
+□ Implement runCrawlers():
+  - Load search configurations
+  - Initialize all crawlers
+  - Run crawlers in parallel (Promise.allSettled)
+  - Log results
+  - Handle errors gracefully
+
+□ Implement cleanupOldJobs():
+  - Mark jobs inactive after 7 days
+  - Delete very old job_postings (optional, 30+ days)
+  - Log cleanup statistics
+
+6.2 Main Entry Point (src/index.js)
+------------------------------------
+□ Initialize application:
+  - Load environment variables
+  - Initialize logger
+  - Test database connection
+  - Start scheduler
+  - Log startup information
+
+□ Implement crawler coordination:
+  async function runCrawlers() {
+    const crawlers = [
+      new IndeedCrawler(),
+      new LinkedInCrawler(),
+      new GreenhouseCrawler(),
+      new LeverCrawler()
+    ];
+    
+    const searchConfigs = getSearchConfigs();
+    
+    for (const config of searchConfigs) {
+      const results = await Promise.allSettled(
+        crawlers.map(crawler => 
+          crawler.crawl(config, saveJobToDatabase)
+        )
+      );
+      
+      logCrawlResults(results);
+    }
+  }
+
+□ Implement saveJobToDatabase callback:
+  async function saveJobToDatabase(jobData) {
+    // Validate required fields
+    // Extract keywords from title
+    // Detect seniority level
+    // Insert/update job_repository
+    // Log success/failure
+  }
+
+□ Search configurations:
+  function getSearchConfigs() {
+    return [
+      {
+        keywords: ['software engineer', 'full stack developer'],
+        locations: ['Remote', 'San Francisco', 'New York'],
+        jobTypes: ['full-time']
+      },
+      {
+        keywords: ['backend engineer', 'api developer'],
+        locations: ['Remote'],
+        jobTypes: ['full-time', 'contract']
+      },
+      // Add more search combinations
+    ];
+  }
+
+================================================================================
+PHASE 7: TESTING (Week 4)
+================================================================================
+
+7.1 Unit Tests
+--------------
+□ Test keyword extraction:
+  - Verify correct keywords extracted from job titles
+  - Test edge cases (special characters, case sensitivity)
+
+□ Test seniority detection:
+  - Verify correct level for various titles
+  - Test edge cases (ambiguous titles)
+
+□ Test rate limiter:
+  - Verify delays are applied
+  - Test exponential backoff
+
+□ Test database queries:
+  - Mock database connection
+  - Verify query construction
+  - Test error handling
+
+7.2 Integration Tests
+----------------------
+□ Test crawler with mock HTML:
+  - Provide sample HTML from each job board
+  - Verify correct data extraction
+  - Test pagination logic
+
+□ Test database operations:
+  - Use test database
+  - Verify upsert behavior
+  - Test conflict handling
+
+□ Test end-to-end flow:
+  - Run single crawler with test data
+  - Verify data saved to database
+  - Check logging output
+
+7.3 Manual Testing
+------------------
+□ Test each crawler individually:
+  - Run with real search parameters
+  - Verify data quality
+  - Check for missing fields
+
+□ Test rate limiting:
+  - Monitor request timing
+  - Verify no rate limit errors
+
+□ Test robots.txt compliance:
+  - Verify disallowed paths are skipped
+
+================================================================================
+PHASE 8: CONTAINERIZATION (Week 4)
+================================================================================
+
+8.1 Dockerfile
+--------------
+□ Create multi-stage Dockerfile:
+  FROM node:18-alpine AS builder
+  WORKDIR /app
+  COPY package*.json ./
+  RUN npm ci --only=production
+  
+  FROM node:18-alpine
+  RUN apk add --no-cache \
+    chromium \
+    nss \
+    freetype \
+    harfbuzz \
+    ca-certificates \
+    ttf-freefont
+  
+  ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser
+  
+  WORKDIR /app
+  COPY --from=builder /app/node_modules ./node_modules
+  COPY src ./src
+  COPY package.json ./
+  
+  CMD ["node", "src/index.js"]
+
+8.2 Docker Compose
+------------------
+□ Create docker-compose.yml for local development:
+  version: '3.8'
+  services:
+    job-discovery-bot:
+      build: .
+      env_file: .env
+      depends_on:
+        - postgres
+      restart: unless-stopped
+    
+    postgres:
+      image: postgres:15-alpine
+      environment:
+        POSTGRES_DB: resumebuilder
+        POSTGRES_USER: postgres
+        POSTGRES_PASSWORD: password
+      ports:
+        - "5432:5432"
+      volumes:
+        - postgres-data:/var/lib/postgresql/data
+        - ./src/db/schema.sql:/docker-entrypoint-initdb.d/schema.sql
+  
+  volumes:
+    postgres-data:
+
+8.3 .dockerignore
+-----------------
+□ Create .dockerignore:
+  node_modules
+  npm-debug.log
+  .env
+  .git
+  .gitignore
+  logs
+  tests
+  *.md
+  .vscode
+
+================================================================================
+PHASE 9: RESUME TUNER INTEGRATION (Week 4-5)
+================================================================================
+
+9.1 API Endpoint: GET /api/jobs/search
+---------------------------------------
+Location: resumeBuilderAuto/server/routes/jobs.js (new file)
+
+□ Implement search endpoint:
+  router.get('/search', async (req, res) => {
+    const { keywords, location, jobType, seniorityLevel, limit = 50 } = req.query;
+    
+    // Parse keywords (comma-separated string to array)
+    // Query job_repository with filters
+    // Return job listings
+  });
+
+□ Query logic:
+  - Use keywords && operator for array overlap
+  - Use ILIKE for location (case-insensitive, partial match)
+  - Filter by is_active = true
+  - Order by posted_date DESC
+  - Limit results
+
+□ Response format:
+  {
+    "jobs": [
+      {
+        "id": 123,
+        "job_url": "https://...",
+        "title": "Senior Software Engineer",
+        "company": "Acme Corp",
+        "location": "Remote",
+        "job_type": "full-time",
+        "seniority_level": "senior",
+        "keywords": ["react", "node"],
+        "source": "indeed",
+        "posted_date": "2025-12-08T10:00:00Z"
+      }
+    ],
+    "total": 150
+  }
+
+9.2 API Endpoint: POST /api/jobs/scrape
+----------------------------------------
+Location: resumeBuilderAuto/server/routes/jobs.js
+
+□ Implement scrape endpoint:
+  router.post('/scrape', async (req, res) => {
+    const { url, job_repo_id } = req.body;
+    
+    // Check if already scraped (query job_postings)
+    // If cached, return existing data
+    // If not, call scraper service
+    // Save to job_postings table
+    // Return full job details
+  });
+
+□ Use existing scraper service:
+  - Import from server/services/scraper.js
+  - Call scrapeJobPosting(url)
+  - Extract description, requirements, responsibilities
+  - Handle errors (timeout, 404, parsing failures)
+
+□ Caching logic:
+  - Check job_postings table by URL
+  - If exists and < 7 days old, return cached
+  - Otherwise, scrape fresh
+
+□ Response format:
+  {
+    "id": 789,
+    "job": {
+      "title": "Senior Software Engineer",
+      "company": "Acme Corp",
+      "location": "Remote",
+      "description": "Full description...",
+      "requirements": "Requirements section...",
+      "responsibilities": "Responsibilities section...",
+      "salary_range": "$150k-$200k"
+    }
+  }
+
+9.3 Update Existing Scraper
+----------------------------
+Location: resumeBuilderAuto/server/services/scraper.js
+
+□ Enhance scraper to support multiple formats:
+  - Greenhouse jobs (structured HTML)
+  - Lever jobs (structured HTML)
+  - Generic job boards (flexible selectors)
+
+□ Implement site detection:
+  - Check URL domain
+  - Use appropriate selectors
+  - Fallback to generic parsing
+
+□ Add structured data extraction:
+  - Parse requirements section (bullets, paragraphs)
+  - Parse responsibilities section
+  - Extract salary if available
+
+9.4 Frontend Integration
+-------------------------
+Location: resumeBuilderAuto/client/src/components/JobSearch.jsx (new)
+
+□ Create job search component:
+  - Search form (keywords, location, job type)
+  - Results list (job cards)
+  - Click to view details
+  - "Tune Resume" button
+
+□ API calls:
+  - Search: GET /api/jobs/search
+  - Scrape: POST /api/jobs/scrape (on "Tune Resume" click)
+
+□ UI flow:
+  1. User enters search criteria
+  2. Display job listings from job_repository
+  3. User clicks "Tune Resume" on a job
+  4. Fetch full job details (scrape if needed)
+  5. Pass to resume tuner component
+
+================================================================================
+PHASE 10: MONITORING & LOGGING (Week 5)
+================================================================================
+
+10.1 Crawler Logging
+--------------------
+□ Add crawler_logs table (already in schema):
+  - Log each crawl session
+  - Record: crawler name, status, jobs found, errors
+  - Track start/end times
+
+□ Implement logging in scheduler:
+  async function runCrawlers() {
+    const startTime = new Date();
+    let totalJobs = 0;
+    let errors = [];
+    
+    // Run crawlers...
+    
+    await logCrawlSession({
+      crawlerName: 'all',
+      status: errors.length > 0 ? 'partial' : 'success',
+      jobsFound: totalJobs,
+      errors: errors.join(', '),
+      startedAt: startTime,
+      completedAt: new Date()
+    });
+  }
+
+10.2 Metrics Dashboard (Optional)
+----------------------------------
+□ Create simple metrics endpoint: GET /metrics
+  - Total jobs in repository
+  - Active jobs count
+  - Jobs per source
+  - Last crawl time
+  - Crawl success rate (last 7 days)
+
+□ Implementation:
+  router.get('/metrics', async (req, res) => {
+    const metrics = await calculateMetrics();
+    res.json(metrics);
+  });
+
+10.3 Health Check Endpoint
+---------------------------
+□ Create health check: GET /health
+  - Check database connection
+  - Check last crawl time (warn if > 12 hours)
+  - Return status: healthy, degraded, unhealthy
+
+□ Implementation:
+  router.get('/health', async (req, res) => {
+    const dbOk = await testDatabaseConnection();
+    const lastCrawl = await getLastCrawlTime();
+    const isStale = (Date.now() - lastCrawl) > 12 * 60 * 60 * 1000;
+    
+    res.json({
+      status: dbOk && !isStale ? 'healthy' : 'degraded',
+      database: dbOk ? 'ok' : 'error',
+      lastCrawl: lastCrawl,
+      uptime: process.uptime()
+    });
+  });
+
+10.4 Error Alerting (Optional)
+-------------------------------
+□ Implement email alerts for critical errors:
+  - No crawls in 12+ hours
+  - Database connection failures
+  - Scrape success rate < 50%
+
+□ Use nodemailer or SendGrid
+□ Configure alert recipients in environment variables
+
+================================================================================
+PHASE 11: DEPLOYMENT (Week 5-6)
+================================================================================
+
+11.1 Cloud SQL Setup
+--------------------
+□ Create Cloud SQL PostgreSQL instance (if not exists)
+□ Run schema migrations:
+  - Connect via Cloud SQL Proxy
+  - Execute src/db/schema.sql
+  - Verify tables created
+
+□ Configure connection:
+  - Set INSTANCE_CONNECTION_NAME in environment
+  - Test connection from local machine
+  - Verify connection pooling works
+
+11.2 GCP Deployment (Cloud Run or GKE)
+---------------------------------------
+Option A: Cloud Run
+□ Build Docker image:
+  docker build -t gcr.io/PROJECT_ID/job-discovery-bot .
+
+□ Push to Container Registry:
+  docker push gcr.io/PROJECT_ID/job-discovery-bot
+
+□ Deploy to Cloud Run:
+  gcloud run deploy job-discovery-bot \
+    --image gcr.io/PROJECT_ID/job-discovery-bot \
+    --platform managed \
+    --region us-central1 \
+    --no-allow-unauthenticated \
+    --add-cloudsql-instances INSTANCE_CONNECTION_NAME \
+    --set-env-vars "DB_USER=...,DB_PASSWORD=...,DB_NAME=..."
+
+Option B: GKE
+□ Create Kubernetes deployment manifest
+□ Configure Cloud SQL Proxy sidecar
+□ Deploy to cluster
+
+11.3 Environment Variables
+---------------------------
+□ Set in Cloud Run/GKE:
+  - DB_USER, DB_PASSWORD, DB_NAME
+  - INSTANCE_CONNECTION_NAME
+  - NODE_ENV=production
+  - LOG_LEVEL=info
+  - CRAWL_INTERVAL (if different from default)
+
+11.4 CI/CD Pipeline (Optional)
+-------------------------------
+□ Create GitHub Actions workflow:
+  - Trigger on push to main
+  - Run tests
+  - Build Docker image
+  - Push to Container Registry
+  - Deploy to Cloud Run
+
+□ Example .github/workflows/deploy.yml:
+  name: Deploy Job Discovery Bot
+  on:
+    push:
+      branches: [main]
+  jobs:
+    deploy:
+      runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v3
+        - name: Set up Cloud SDK
+          uses: google-github-actions/setup-gcloud@v1
+        - name: Build and push
+          run: |
+            docker build -t gcr.io/$PROJECT_ID/job-discovery-bot .
+            docker push gcr.io/$PROJECT_ID/job-discovery-bot
+        - name: Deploy to Cloud Run
+          run: |
+            gcloud run deploy job-discovery-bot --image gcr.io/$PROJECT_ID/job-discovery-bot
+
+================================================================================
+PHASE 12: OPTIMIZATION & SCALING (Week 6+)
+================================================================================
+
+12.1 Performance Optimization
+------------------------------
+□ Implement connection pooling best practices:
+  - Monitor pool usage
+  - Adjust max connections based on load
+
+□ Optimize database queries:
+  - Use EXPLAIN ANALYZE to check query plans
+  - Add indexes where needed
+  - Use batch inserts for multiple jobs
+
+□ Implement caching:
+  - Cache robots.txt responses (1 hour)
+  - Cache DNS lookups
+  - Consider Redis for distributed caching
+
+12.2 Scaling Strategies
+-----------------------
+□ Horizontal scaling:
+  - Run multiple bot instances with different search terms
+  - Use distributed locking (Redis) to avoid duplicate work
+  - Partition searches by source or location
+
+□ Vertical scaling:
+  - Increase memory for Puppeteer instances
+  - Use more powerful Cloud Run instances
+
+□ Database scaling:
+  - Upgrade Cloud SQL instance if needed
+  - Consider read replicas for search queries
+  - Partition job_repository table by date (if millions of rows)
+
+12.3 Advanced Features
+----------------------
+□ Implement proxy rotation:
+  - Use proxy service (Bright Data, Oxylabs)
+  - Rotate IPs to avoid blocking
+  - Configure per crawler
+
+□ Add more job sources:
+  - AngelList/Wellfound (startup jobs)
+  - Company career pages (direct crawling)
+  - Niche job boards (Stack Overflow, GitHub Jobs)
+
+□ Enhance keyword extraction:
+  - Use NLP library (compromise, natural)
+  - Extract skills from full descriptions
+  - Build skill taxonomy
+
+12.4 Analytics & Insights
+--------------------------
+□ Track job market trends:
+  - Most in-demand skills (keyword frequency)
+  - Average time-to-fill (posting to removal)
+  - Geographic distribution
+
+□ Implement user analytics:
+  - Track popular searches
+  - Monitor scrape success rates
+  - Identify problematic job sources
+
+================================================================================
+PHASE 13: DOCUMENTATION (Ongoing)
+================================================================================
+
+13.1 Code Documentation
+------------------------
+□ Add JSDoc comments to all functions
+□ Document crawler selector patterns
+□ Add inline comments for complex logic
+
+13.2 README Files
+-----------------
+□ Main README.md:
+  - Project overview
+  - Architecture diagram
+  - Setup instructions
+  - Environment variables
+  - Deployment guide
+
+□ DEVELOPMENT.md:
+  - Local development setup
+  - Running tests
+  - Adding new crawlers
+  - Debugging tips
+
+□ DEPLOYMENT.md:
+  - Cloud SQL setup
+  - Docker deployment
+  - Environment configuration
+  - Monitoring and logs
+
+13.3 API Documentation
+----------------------
+□ Document API endpoints:
+  - Request/response formats
+  - Example curl commands
+  - Error codes
+
+□ Create Postman collection (optional)
+
+================================================================================
+TESTING CHECKLIST
+================================================================================
+
+□ Unit tests pass (npm test)
+□ Integration tests pass
+□ Manual crawler tests successful for each source
+□ Database migrations run without errors
+□ Docker build succeeds
+□ Docker Compose stack runs locally
+□ Health check endpoint returns healthy status
+□ Job search API returns expected results
+□ Job scrape API successfully fetches full details
+□ Rate limiting prevents request flooding
+□ Robots.txt compliance verified
+□ Logs are written correctly
+□ Errors are caught and logged
+□ Cleanup job marks old postings inactive
+□ Cloud SQL connection works in production
+□ Environment variables loaded correctly
+
+================================================================================
+DEPLOYMENT CHECKLIST
+================================================================================
+
+□ Cloud SQL instance created and configured
+□ Database schema deployed
+□ Docker image built and pushed to registry
+□ Cloud Run/GKE service deployed
+□ Environment variables set
+□ Cloud SQL connection verified
+□ Health check endpoint accessible
+□ First crawl run successfully
+□ Jobs appearing in database
+□ Resume tuner service can query job_repository
+□ Resume tuner service can scrape full job details
+□ Monitoring/logging configured
+□ Alerts configured (optional)
+□ CI/CD pipeline configured (optional)
+
+================================================================================
+MAINTENANCE SCHEDULE
+================================================================================
+
+Weekly:
+  □ Review crawler logs for errors
+  □ Check database size and growth
+  □ Monitor crawl success rates
+  □ Verify all crawlers are running
+
+Monthly:
+  □ Update crawler selectors if job boards changed HTML
+  □ Review and expand keyword dictionary
+  □ Analyze job market trends
+  □ Update search configurations based on usage
+
+Quarterly:
+  □ Evaluate new job sources to add
+  □ Review and optimize database queries
+  □ Update dependencies (npm audit fix)
+  □ Review and update documentation
+
+As Needed:
+  □ Handle rate limiting issues (IP blocks)
+  □ Fix broken crawlers (site changes)
+  □ Scale infrastructure based on load
+  □ Add new search terms/locations
+
+================================================================================
+SUCCESS METRICS
+================================================================================
+
+Technical Metrics:
+  - Jobs discovered per day: Target 500-1000
+  - Crawler uptime: Target 99%
+  - Scrape success rate: Target 95%
+  - Database query response time: < 100ms
+  - API endpoint response time: < 500ms
+
+Business Metrics:
+  - Active jobs in repository: Target 5,000-10,000
+  - Job diversity (number of companies): Target 500+
+  - Search result relevance (user feedback)
+  - Resume tuning completion rate
+
+Quality Metrics:
+  - Data completeness (% of jobs with all fields): Target 90%
+  - Duplicate job ratio: Target < 5%
+  - Keyword extraction accuracy: Target 85%
+  - Seniority detection accuracy: Target 80%
+
+================================================================================
+RISKS & MITIGATIONS
+================================================================================
+
+Risk: Job boards block crawler
+Mitigation:
+  - Use official APIs where available
+  - Implement aggressive rate limiting
+  - Use proxy rotation
+  - Monitor for 429/403 errors
+
+Risk: Site HTML structure changes
+Mitigation:
+  - Regular monitoring and testing
+  - Modular crawler design (easy to update selectors)
+  - Log parsing errors for investigation
+  - Graceful degradation (skip failed sources)
+
+Risk: Database grows too large
+Mitigation:
+  - Regular cleanup of old jobs
+  - Archive old job_postings (move to cold storage)
+  - Partition tables by date
+  - Monitor disk usage
+
+Risk: Cloud costs exceed budget
+Mitigation:
+  - Set up billing alerts
+  - Optimize crawler efficiency (fewer pages)
+  - Use spot instances (GKE) or lower Cloud Run tiers
+  - Cache aggressively
+
+Risk: Crawlers miss new jobs
+Mitigation:
+  - Increase crawl frequency (4 hours instead of 6)
+  - Add more search term combinations
+  - Monitor job count trends
+  - Alert on significant drops
+
+================================================================================
+FUTURE ENHANCEMENTS (Post-Launch)
+================================================================================
+
+High Priority:
+  □ Add LinkedIn Jobs API integration (requires partnership)
+  □ Add Indeed Publisher API integration
+  □ Implement email job alerts for users
+  □ Add salary data extraction and normalization
+  □ Build job recommendation engine
+
+Medium Priority:
+  □ Add company career page crawlers
+  □ Implement real-time job updates (WebSockets)
+  □ Build admin dashboard for monitoring
+  □ Add job application tracking
+  □ Implement user feedback loop (job quality ratings)
+
+Low Priority:
+  □ Add ML-based job-resume matching
+  □ Build job market analytics dashboard
+  □ Implement salary benchmarking tool
+  □ Add benefits/perks filtering
+  □ Build recruiter platform integration
+
+================================================================================
+RESOURCE REQUIREMENTS
+================================================================================
+
+Development Team:
+  - 1 Backend Developer (full-time, 4-6 weeks)
+  - 1 Frontend Developer (part-time, 1-2 weeks for integration)
+  - 1 DevOps Engineer (part-time, 1 week for deployment)
+
+Infrastructure:
+  - Cloud SQL PostgreSQL instance (db-f1-micro or higher)
+  - Cloud Run service (1 instance, 1 vCPU, 2GB RAM)
+  - Container Registry storage
+  - Cloud Storage (for logs, optional)
+
+Estimated Costs:
+  - Cloud SQL: $10-30/month (depending on instance size)
+  - Cloud Run: $5-20/month (based on usage)
+  - Container Registry: $1-5/month
+  - Total: ~$15-55/month for production
+
+Development Time:
+  - Phase 1-2 (Setup & Core): 1 week
+  - Phase 3-4 (Crawlers): 1.5 weeks
+  - Phase 5-6 (Database & Scheduler): 1 week
+  - Phase 7-8 (Testing & Docker): 0.5 weeks
+  - Phase 9 (Integration): 1 week
+  - Phase 10-11 (Monitoring & Deployment): 1 week
+  - Total: ~6 weeks
+
+================================================================================
+CONTACT & SIGN-OFF
+================================================================================
+
+Project Owner: klogdog
+Repository: github.com/klogdog/jobscraper
+Related Repo: github.com/klogdog/resumeBuilderAuto
+
+Sign-off required from:
+  □ Technical Lead (architecture review)
+  □ Product Manager (requirements validation)
+  □ DevOps Lead (deployment strategy)
+  □ Legal/Compliance (web scraping policy)
+
+Implementation Start Date: TBD
+Target Launch Date: TBD
+
+================================================================================
+END OF PLAN
+================================================================================
+
+This plan provides a comprehensive roadmap for building the Job Discovery & 
+Scraping Service. Follow phases sequentially, testing thoroughly at each stage.
+Adjust timelines and priorities based on team capacity and business needs.
+
+For questions or clarifications, refer to the original technical specification
+or contact the project owner.
