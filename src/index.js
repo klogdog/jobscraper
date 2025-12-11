@@ -3,7 +3,7 @@ const config = require('./config');
 const logger = require('./utils/logger');
 const pool = require('./db/connection');
 const { upsertJob, markInactive } = require('./db/queries');
-const IndeedCrawler = require('./crawlers/indeed');
+const CareerPageCrawler = require('./crawlers/careerPage');
 
 /**
  * Run the crawler
@@ -11,12 +11,11 @@ const IndeedCrawler = require('./crawlers/indeed');
 async function runCrawler() {
   logger.info('=== Starting crawler job ===');
   
-  const crawler = new IndeedCrawler({ rateLimit: config.crawler.rateLimit });
+  const crawler = new CareerPageCrawler({ rateLimit: config.crawler.rateLimit });
   
   const searchParams = {
     keywords: config.crawler.searchKeywords,
-    locations: config.crawler.searchLocations,
-    maxPages: config.crawler.maxPages,
+    maxCompanies: config.crawler.maxCompanies,
   };
   
   try {
@@ -77,7 +76,7 @@ async function main() {
   logger.info('=== Job Scraper Starting ===');
   logger.info(`Environment: ${config.nodeEnv}`);
   logger.info(`Search keywords: ${config.crawler.searchKeywords.join(', ')}`);
-  logger.info(`Search locations: ${config.crawler.searchLocations.join(', ')}`);
+  logger.info(`Max companies per run: ${config.crawler.maxCompanies}`);
   
   // Test database connection
   const dbConnected = await testDatabaseConnection();

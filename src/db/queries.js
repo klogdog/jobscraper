@@ -8,12 +8,13 @@ const logger = require('../utils/logger');
 async function upsertJob(jobData) {
   const query = `
     INSERT INTO job_repository (
-      job_url, title, company, location, keywords, source, last_verified
-    ) VALUES ($1, $2, $3, $4, $5, $6, NOW())
+      job_url, title, company, location, keywords, source, remote_policy, last_verified
+    ) VALUES ($1, $2, $3, $4, $5, $6, $7, NOW())
     ON CONFLICT (job_url) DO UPDATE SET
       last_verified = NOW(),
       is_active = true,
-      keywords = EXCLUDED.keywords
+      keywords = EXCLUDED.keywords,
+      remote_policy = EXCLUDED.remote_policy
     RETURNING id;
   `;
   
@@ -24,6 +25,7 @@ async function upsertJob(jobData) {
     jobData.location,
     jobData.keywords,
     jobData.source,
+    jobData.remotePolicy || null,
   ];
   
   try {

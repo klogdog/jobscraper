@@ -10,11 +10,10 @@ module.exports = {
   },
   
   crawler: {
-    // Hardcoded search parameters for MVP
-    searchKeywords: ['software engineer', 'full stack developer'],
-    searchLocations: ['Remote'],
-    maxPages: 2,
-    rateLimit: 3000, // 3 seconds delay between requests
+    // Search parameters for career page crawler
+    searchKeywords: ['software engineer', 'full stack developer', 'backend', 'frontend'],
+    maxCompanies: 10, // Number of companies to crawl per run
+    rateLimit: 5000, // 5 seconds delay between requests to be respectful
   },
   
   scheduler: {

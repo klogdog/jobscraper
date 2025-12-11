@@ -1,10 +1,73 @@
 # Quick Start Guide
 
+## How to Use
+
+### 1. Start the Application
+
+```bash
+docker-compose up --build
+```
+
+This will:
+- Start PostgreSQL database
+- Start the job scraper
+- Run an initial crawl immediately
+- Schedule automatic daily crawls at 9:00 AM
+- Schedule cleanup of old jobs at 2:00 AM
+
+### 2. View Scraped Jobs
+
+```bash
+# View all jobs
+docker exec -it jobscraper-postgres-1 psql -U postgres -d resumebuilder -c "SELECT id, title, company, location, source, created_at FROM jobs ORDER BY created_at DESC LIMIT 20;"
+
+# Count total jobs
+docker exec -it jobscraper-postgres-1 psql -U postgres -d resumebuilder -c "SELECT COUNT(*) FROM jobs WHERE is_active = true;"
+
+# Search by keyword
+docker exec -it jobscraper-postgres-1 psql -U postgres -d resumebuilder -c "SELECT title, company, location FROM jobs WHERE 'engineer' = ANY(keywords);"
+```
+
+### 3. View Application Logs
+
+```bash
+# Follow logs in real-time
+docker-compose logs -f job-bot
+
+# View database logs
+docker-compose logs -f postgres
+```
+
+### 4. Stop the Application
+
+```bash
+# Stop containers (keeps data)
+docker-compose down
+
+# Stop and remove all data
+docker-compose down -v
+```
+
+### 5. Customize Search Parameters
+
+Edit `src/config.js` to change:
+- **Search keywords**: `searchKeywords: ['software engineer', 'data scientist']`
+- **Locations**: `searchLocations: ['Remote', 'New York, NY']`
+- **Pages per search**: `maxPages: 3`
+- **Rate limit**: `rateLimit: 5000` (milliseconds between requests)
+
+Then restart:
+```bash
+docker-compose restart
+```
+
+---
+
 ## Testing Locally (without Docker)
 
 ### Prerequisites
 1. PostgreSQL 15+ installed and running
-2. Node.js 18+ installed
+2. Node.js 20+ installed
 
 ### Steps
 
@@ -13,31 +76,31 @@
 npm install
 ```
 
-2. **Create the database:**
+2. **Create .env file:**
+```bash
+cat > .env << EOF
+DB_USER=postgres
+DB_HOST=localhost
+DB_NAME=resumebuilder
+DB_PASSWORD=password
+DB_PORT=5432
+EOF
+```
+
+3. **Create the database:**
 ```bash
 createdb resumebuilder
 ```
 
-3. **Initialize the schema:**
+4. **Initialize the schema:**
 ```bash
 psql -d resumebuilder -f src/db/schema.sql
-```
-
-4. **Configure environment:**
-```bash
-cp .env.example .env
-# Edit .env with your database credentials if needed
 ```
 
 5. **Run the crawler:**
 ```bash
 npm start
 ```
-
-The crawler will:
-- Run an initial crawl immediately on startup
-- Schedule daily crawls at 9 AM
-- Schedule cleanup at 2 AM daily
 
 ### Check Results
 
@@ -47,7 +110,7 @@ psql -d resumebuilder
 
 -- View discovered jobs
 SELECT id, title, company, location, keywords, source 
-FROM job_repository 
+FROM jobs 
 WHERE is_active = true 
 ORDER BY created_at DESC 
 LIMIT 10;

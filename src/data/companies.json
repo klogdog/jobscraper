@@ -1,0 +1,1490 @@
+[
+  {
+    "name": "Google",
+    "careerUrl": "https://careers.google.com/jobs/results/",
+    "type": "json-api",
+    "remotePolicy": "hybrid"
+  },
+  {
+    "name": "Microsoft",
+    "careerUrl": "https://careers.microsoft.com/us/en/search-results",
+    "type": "html",
+    "remotePolicy": "hybrid-remote-friendly"
+  },
+  {
+    "name": "Amazon",
+    "careerUrl": "https://www.amazon.jobs/en/search",
+    "type": "html",
+    "remotePolicy": "hybrid"
+  },
+  {
+    "name": "Meta",
+    "careerUrl": "https://www.metacareers.com/jobs",
+    "type": "html",
+    "remotePolicy": "hybrid"
+  },
+  {
+    "name": "Apple",
+    "careerUrl": "https://jobs.apple.com/en-us/search",
+    "type": "html",
+    "remotePolicy": "hybrid"
+  },
+  {
+    "name": "Netflix",
+    "careerUrl": "https://jobs.netflix.com/search",
+    "type": "html",
+    "remotePolicy": "hybrid"
+  },
+  {
+    "name": "Salesforce",
+    "careerUrl": "https://careers.salesforce.com/en/jobs/",
+    "type": "html",
+    "remotePolicy": "remote-friendly"
+  },
+  {
+    "name": "Adobe",
+    "careerUrl": "https://careers.adobe.com/us/en/search-results",
+    "type": "html",
+    "remotePolicy": "remote-first"
+  },
+  {
+    "name": "Intel",
+    "careerUrl": "https://jobs.intel.com/en/search-jobs",
+    "type": "html",
+    "remotePolicy": "hybrid"
+  },
+  {
+    "name": "IBM",
+    "careerUrl": "https://www.ibm.com/careers/search",
+    "type": "html",
+    "remotePolicy": "remote-friendly"
+  },
+  {
+    "name": "Oracle",
+    "careerUrl": "https://careers.oracle.com/jobs/",
+    "type": "html",
+    "remotePolicy": "hybrid"
+  },
+  {
+    "name": "Cisco",
+    "careerUrl": "https://jobs.cisco.com/jobs/SearchJobs/",
+    "type": "html",
+    "remotePolicy": "remote-friendly"
+  },
+  {
+    "name": "Uber",
+    "careerUrl": "https://www.uber.com/us/en/careers/list/",
+    "type": "html",
+    "remotePolicy": "hybrid"
+  },
+  {
+    "name": "Airbnb",
+    "careerUrl": "https://careers.airbnb.com/positions/",
+    "type": "html",
+    "remotePolicy": "remote-friendly"
+  },
+  {
+    "name": "LinkedIn",
+    "careerUrl": "https://careers.linkedin.com/jobs",
+    "type": "html",
+    "remotePolicy": "hybrid"
+  },
+  {
+    "name": "X (Twitter)",
+    "careerUrl": "https://careers.twitter.com/en/roles.html",
+    "type": "html",
+    "remotePolicy": "hybrid"
+  },
+  {
+    "name": "Stripe",
+    "careerUrl": "https://stripe.com/jobs/search",
+    "type": "html",
+    "remotePolicy": "remote-friendly"
+  },
+  {
+    "name": "Spotify",
+    "careerUrl": "https://www.lifeatspotify.com/jobs",
+    "type": "html",
+    "remotePolicy": "remote-friendly"
+  },
+  {
+    "name": "Snap",
+    "careerUrl": "https://careers.snap.com/jobs",
+    "type": "html",
+    "remotePolicy": "hybrid"
+  },
+  {
+    "name": "Tesla",
+    "careerUrl": "https://www.tesla.com/careers/search/",
+    "type": "html",
+    "remotePolicy": "on-site"
+  },
+  {
+    "name": "SpaceX",
+    "careerUrl": "https://www.spacex.com/careers/",
+    "type": "html",
+    "remotePolicy": "on-site"
+  },
+  {
+    "name": "Nvidia",
+    "careerUrl": "https://nvidia.wd5.myworkdayjobs.com/NVIDIAExternalCareerSite",
+    "type": "workday",
+    "remotePolicy": "hybrid"
+  },
+  {
+    "name": "AMD",
+    "careerUrl": "https://careers.amd.com/careers-home/jobs",
+    "type": "html",
+    "remotePolicy": "hybrid"
+  },
+  {
+    "name": "Qualcomm",
+    "careerUrl": "https://qualcomm.wd5.myworkdayjobs.com/External",
+    "type": "workday",
+    "remotePolicy": "hybrid"
+  },
+  {
+    "name": "PayPal",
+    "careerUrl": "https://jobsearch.paypal-corp.com/en-US/search",
+    "type": "html",
+    "remotePolicy": "hybrid"
+  },
+  {
+    "name": "Block (Square)",
+    "careerUrl": "https://careers.squareup.com/us/en/jobs",
+    "type": "html",
+    "remotePolicy": "remote-friendly"
+  },
+  {
+    "name": "Coinbase",
+    "careerUrl": "https://www.coinbase.com/careers/positions",
+    "type": "html",
+    "remotePolicy": "remote-first"
+  },
+  {
+    "name": "Robinhood",
+    "careerUrl": "https://robinhood.com/us/en/careers/openings/",
+    "type": "html",
+    "remotePolicy": "hybrid"
+  },
+  {
+    "name": "DoorDash",
+    "careerUrl": "https://careers.doordash.com/jobs/",
+    "type": "html",
+    "remotePolicy": "hybrid"
+  },
+  {
+    "name": "Instacart",
+    "careerUrl": "https://instacart.careers/current-openings/",
+    "type": "html",
+    "remotePolicy": "remote-friendly"
+  },
+  {
+    "name": "GitLab",
+    "careerUrl": "https://about.gitlab.com/jobs/all-jobs/",
+    "type": "html",
+    "remotePolicy": "remote-first"
+  },
+  {
+    "name": "Zapier",
+    "careerUrl": "https://zapier.com/jobs",
+    "type": "html",
+    "remotePolicy": "remote-first"
+  },
+  {
+    "name": "Buffer",
+    "careerUrl": "https://buffer.com/journey",
+    "type": "html",
+    "remotePolicy": "remote-first"
+  },
+  {
+    "name": "Automattic",
+    "careerUrl": "https://automattic.com/work-with-us/",
+    "type": "html",
+    "remotePolicy": "remote-first"
+  },
+  {
+    "name": "Doist",
+    "careerUrl": "https://doist.com/careers",
+    "type": "html",
+    "remotePolicy": "remote-first"
+  },
+  {
+    "name": "Atlassian",
+    "careerUrl": "https://www.atlassian.com/company/careers/all-jobs",
+    "type": "html",
+    "remotePolicy": "remote-first"
+  },
+  {
+    "name": "Shopify",
+    "careerUrl": "https://www.shopify.com/careers",
+    "type": "html",
+    "remotePolicy": "remote-first"
+  },
+  {
+    "name": "Twilio",
+    "careerUrl": "https://www.twilio.com/en-us/company/jobs",
+    "type": "html",
+    "remotePolicy": "remote-first"
+  },
+  {
+    "name": "Cloudflare",
+    "careerUrl": "https://www.cloudflare.com/careers/jobs/",
+    "type": "html",
+    "remotePolicy": "remote-friendly"
+  },
+  {
+    "name": "Datadog",
+    "careerUrl": "https://careers.datadoghq.com/all-jobs/",
+    "type": "html",
+    "remotePolicy": "remote-friendly"
+  },
+  {
+    "name": "MongoDB",
+    "careerUrl": "https://www.mongodb.com/company/careers",
+    "type": "html",
+    "remotePolicy": "remote-friendly"
+  },
+  {
+    "name": "Elastic",
+    "careerUrl": "https://www.elastic.co/careers/",
+    "type": "html",
+    "remotePolicy": "remote-first"
+  },
+  {
+    "name": "HashiCorp",
+    "careerUrl": "https://www.hashicorp.com/careers",
+    "type": "html",
+    "remotePolicy": "remote-friendly"
+  },
+  {
+    "name": "Grafana Labs",
+    "careerUrl": "https://grafana.com/about/careers/open-positions/",
+    "type": "html",
+    "remotePolicy": "remote-first"
+  },
+  {
+    "name": "Supabase",
+    "careerUrl": "https://supabase.com/careers",
+    "type": "html",
+    "remotePolicy": "remote-first"
+  },
+  {
+    "name": "Vercel",
+    "careerUrl": "https://vercel.com/careers",
+    "type": "html",
+    "remotePolicy": "remote-friendly"
+  },
+  {
+    "name": "Notion",
+    "careerUrl": "https://www.notion.so/careers",
+    "type": "html",
+    "remotePolicy": "hybrid"
+  },
+  {
+    "name": "Figma",
+    "careerUrl": "https://www.figma.com/careers/",
+    "type": "html",
+    "remotePolicy": "hybrid"
+  },
+  {
+    "name": "Canva",
+    "careerUrl": "https://www.canva.com/careers/jobs/",
+    "type": "html",
+    "remotePolicy": "remote-friendly"
+  },
+  {
+    "name": "Airtable",
+    "careerUrl": "https://airtable.com/careers",
+    "type": "html",
+    "remotePolicy": "hybrid"
+  },
+  {
+    "name": "Asana",
+    "careerUrl": "https://asana.com/jobs/all",
+    "type": "html",
+    "remotePolicy": "hybrid"
+  },
+  {
+    "name": "Monday.com",
+    "careerUrl": "https://monday.com/careers",
+    "type": "html",
+    "remotePolicy": "hybrid"
+  },
+  {
+    "name": "Webflow",
+    "careerUrl": "https://webflow.com/company/careers",
+    "type": "html",
+    "remotePolicy": "remote-first"
+  },
+  {
+    "name": "HubSpot",
+    "careerUrl": "https://www.hubspot.com/careers/jobs",
+    "type": "html",
+    "remotePolicy": "remote-friendly"
+  },
+  {
+    "name": "Zendesk",
+    "careerUrl": "https://jobs.zendesk.com/us/en/search-results",
+    "type": "html",
+    "remotePolicy": "remote-friendly"
+  },
+  {
+    "name": "Okta",
+    "careerUrl": "https://www.okta.com/company/careers/",
+    "type": "html",
+    "remotePolicy": "remote-friendly"
+  },
+  {
+    "name": "1Password",
+    "careerUrl": "https://1password.com/jobs/",
+    "type": "html",
+    "remotePolicy": "remote-first"
+  },
+  {
+    "name": "Plaid",
+    "careerUrl": "https://plaid.com/careers/",
+    "type": "html",
+    "remotePolicy": "remote-friendly"
+  },
+  {
+    "name": "Brex",
+    "careerUrl": "https://www.brex.com/careers",
+    "type": "html",
+    "remotePolicy": "remote-friendly"
+  },
+  {
+    "name": "Ramp",
+    "careerUrl": "https://ramp.com/careers",
+    "type": "html",
+    "remotePolicy": "hybrid"
+  },
+  {
+    "name": "Linear",
+    "careerUrl": "https://linear.app/careers",
+    "type": "html",
+    "remotePolicy": "remote-first"
+  },
+  {
+    "name": "Loom",
+    "careerUrl": "https://www.loom.com/careers",
+    "type": "html",
+    "remotePolicy": "remote-first"
+  },
+  {
+    "name": "Miro",
+    "careerUrl": "https://miro.com/careers/",
+    "type": "html",
+    "remotePolicy": "remote-friendly"
+  },
+  {
+    "name": "Slack",
+    "careerUrl": "https://slack.com/careers",
+    "type": "html",
+    "remotePolicy": "remote-friendly"
+  },
+  {
+    "name": "Discord",
+    "careerUrl": "https://discord.com/careers",
+    "type": "html",
+    "remotePolicy": "remote-friendly"
+  },
+  {
+    "name": "Zoom",
+    "careerUrl": "https://careers.zoom.us/jobs/search",
+    "type": "html",
+    "remotePolicy": "remote-friendly"
+  },
+  {
+    "name": "Calendly",
+    "careerUrl": "https://calendly.com/careers",
+    "type": "html",
+    "remotePolicy": "remote-friendly"
+  },
+  {
+    "name": "Docusign",
+    "careerUrl": "https://careers.docusign.com/jobs/search",
+    "type": "html",
+    "remotePolicy": "remote-friendly"
+  },
+  {
+    "name": "Dropbox",
+    "careerUrl": "https://jobs.dropbox.com/all-jobs",
+    "type": "html",
+    "remotePolicy": "remote-first"
+  },
+  {
+    "name": "Box",
+    "careerUrl": "https://www.box.com/careers",
+    "type": "html",
+    "remotePolicy": "hybrid"
+  },
+  {
+    "name": "Splunk",
+    "careerUrl": "https://www.splunk.com/en_us/careers.html",
+    "type": "html",
+    "remotePolicy": "remote-friendly"
+  },
+  {
+    "name": "New Relic",
+    "careerUrl": "https://newrelic.com/about/careers",
+    "type": "html",
+    "remotePolicy": "remote-friendly"
+  },
+  {
+    "name": "PagerDuty",
+    "careerUrl": "https://careers.pagerduty.com/jobs/search",
+    "type": "html",
+    "remotePolicy": "remote-friendly"
+  },
+  {
+    "name": "Snowflake",
+    "careerUrl": "https://careers.snowflake.com/us/en/search-results",
+    "type": "html",
+    "remotePolicy": "hybrid"
+  },
+  {
+    "name": "Databricks",
+    "careerUrl": "https://www.databricks.com/company/careers",
+    "type": "html",
+    "remotePolicy": "hybrid"
+  },
+  {
+    "name": "Confluent",
+    "careerUrl": "https://www.confluent.io/careers/",
+    "type": "html",
+    "remotePolicy": "remote-friendly"
+  },
+  {
+    "name": "Palantir",
+    "careerUrl": "https://www.palantir.com/careers/",
+    "type": "html",
+    "remotePolicy": "hybrid"
+  },
+  {
+    "name": "Reddit",
+    "careerUrl": "https://www.redditinc.com/careers",
+    "type": "html",
+    "remotePolicy": "remote-friendly"
+  },
+  {
+    "name": "Pinterest",
+    "careerUrl": "https://www.pinterestcareers.com/jobs/",
+    "type": "html",
+    "remotePolicy": "remote-friendly"
+  },
+  {
+    "name": "Etsy",
+    "careerUrl": "https://careers.etsy.com/global/en/search-results",
+    "type": "html",
+    "remotePolicy": "remote-friendly"
+  },
+  {
+    "name": "Lyft",
+    "careerUrl": "https://www.lyft.com/careers",
+    "type": "html",
+    "remotePolicy": "hybrid"
+  },
+  {
+    "name": "Grab",
+    "careerUrl": "https://grab.careers/jobs/",
+    "type": "html",
+    "remotePolicy": "hybrid"
+  },
+  {
+    "name": "ServiceNow",
+    "careerUrl": "https://careers.servicenow.com/careers/jobs",
+    "type": "html",
+    "remotePolicy": "remote-friendly"
+  },
+  {
+    "name": "Workday",
+    "careerUrl": "https://www.workday.com/en-us/company/careers/open-positions.html",
+    "type": "html",
+    "remotePolicy": "remote-friendly"
+  },
+  {
+    "name": "Intuit",
+    "careerUrl": "https://jobs.intuit.com/search-jobs",
+    "type": "html",
+    "remotePolicy": "remote-friendly"
+  },
+  {
+    "name": "Toast",
+    "careerUrl": "https://careers.toasttab.com/jobs/search",
+    "type": "html",
+    "remotePolicy": "hybrid"
+  },
+  {
+    "name": "Gusto",
+    "careerUrl": "https://gusto.com/about/careers",
+    "type": "html",
+    "remotePolicy": "remote-friendly"
+  },
+  {
+    "name": "Rippling",
+    "careerUrl": "https://www.rippling.com/careers",
+    "type": "html",
+    "remotePolicy": "hybrid"
+  },
+  {
+    "name": "Deel",
+    "careerUrl": "https://www.deel.com/careers",
+    "type": "html",
+    "remotePolicy": "remote-first"
+  },
+  {
+    "name": "Remote.com",
+    "careerUrl": "https://remote.com/careers",
+    "type": "html",
+    "remotePolicy": "remote-first"
+  },
+  {
+    "name": "Oyster",
+    "careerUrl": "https://www.oysterhr.com/careers",
+    "type": "html",
+    "remotePolicy": "remote-first"
+  },
+  {
+    "name": "Lattice",
+    "careerUrl": "https://lattice.com/careers",
+    "type": "html",
+    "remotePolicy": "remote-friendly"
+  },
+  {
+    "name": "Culture Amp",
+    "careerUrl": "https://www.cultureamp.com/careers",
+    "type": "html",
+    "remotePolicy": "remote-friendly"
+  },
+  {
+    "name": "Greenhouse",
+    "careerUrl": "https://www.greenhouse.com/careers",
+    "type": "html",
+    "remotePolicy": "remote-friendly"
+  },
+  {
+    "name": "Lever",
+    "careerUrl": "https://www.lever.co/careers/",
+    "type": "html",
+    "remotePolicy": "remote-friendly"
+  },
+  {
+    "name": "Ashby",
+    "careerUrl": "https://www.ashbyhq.com/careers",
+    "type": "html",
+    "remotePolicy": "remote-first"
+  },
+  {
+    "name": "Toptal",
+    "careerUrl": "https://www.toptal.com/careers",
+    "type": "html",
+    "remotePolicy": "remote-first"
+  },
+  {
+    "name": "Turing",
+    "careerUrl": "https://www.turing.com/careers",
+    "type": "html",
+    "remotePolicy": "remote-first"
+  },
+  {
+    "name": "Andela",
+    "careerUrl": "https://andela.com/careers",
+    "type": "html",
+    "remotePolicy": "remote-first"
+  },
+  {
+    "name": "Upwork",
+    "careerUrl": "https://www.upwork.com/careers/",
+    "type": "html",
+    "remotePolicy": "remote-first"
+  },
+  {
+    "name": "Fiverr",
+    "careerUrl": "https://www.fiverr.com/jobs",
+    "type": "html",
+    "remotePolicy": "hybrid"
+  },
+  {
+    "name": "GitHub",
+    "careerUrl": "https://www.github.careers/careers-home",
+    "type": "html",
+    "remotePolicy": "remote-first"
+  },
+  {
+    "name": "DigitalOcean",
+    "careerUrl": "https://www.digitalocean.com/careers",
+    "type": "html",
+    "remotePolicy": "remote-first"
+  },
+  {
+    "name": "Linode (Akamai)",
+    "careerUrl": "https://www.akamai.com/careers",
+    "type": "html",
+    "remotePolicy": "remote-friendly"
+  },
+  {
+    "name": "Vultr",
+    "careerUrl": "https://www.vultr.com/company/careers/",
+    "type": "html",
+    "remotePolicy": "remote-friendly"
+  },
+  {
+    "name": "Render",
+    "careerUrl": "https://render.com/careers",
+    "type": "html",
+    "remotePolicy": "remote-first"
+  },
+  {
+    "name": "Railway",
+    "careerUrl": "https://railway.app/careers",
+    "type": "html",
+    "remotePolicy": "remote-first"
+  },
+  {
+    "name": "Fly.io",
+    "careerUrl": "https://fly.io/jobs/",
+    "type": "html",
+    "remotePolicy": "remote-first"
+  },
+  {
+    "name": "Netlify",
+    "careerUrl": "https://www.netlify.com/careers/",
+    "type": "html",
+    "remotePolicy": "remote-first"
+  },
+  {
+    "name": "Contentful",
+    "careerUrl": "https://www.contentful.com/careers/",
+    "type": "html",
+    "remotePolicy": "remote-friendly"
+  },
+  {
+    "name": "Sanity",
+    "careerUrl": "https://www.sanity.io/careers",
+    "type": "html",
+    "remotePolicy": "remote-friendly"
+  },
+  {
+    "name": "Prisma",
+    "careerUrl": "https://www.prisma.io/careers",
+    "type": "html",
+    "remotePolicy": "remote-first"
+  },
+  {
+    "name": "Hasura",
+    "careerUrl": "https://hasura.io/careers/",
+    "type": "html",
+    "remotePolicy": "remote-first"
+  },
+  {
+    "name": "Auth0 (Okta)",
+    "careerUrl": "https://www.okta.com/company/careers/",
+    "type": "html",
+    "remotePolicy": "remote-friendly"
+  },
+  {
+    "name": "Clerk",
+    "careerUrl": "https://clerk.com/careers",
+    "type": "html",
+    "remotePolicy": "remote-friendly"
+  },
+  {
+    "name": "PostHog",
+    "careerUrl": "https://posthog.com/careers",
+    "type": "html",
+    "remotePolicy": "remote-first"
+  },
+  {
+    "name": "Mixpanel",
+    "careerUrl": "https://mixpanel.com/jobs/",
+    "type": "html",
+    "remotePolicy": "remote-friendly"
+  },
+  {
+    "name": "Amplitude",
+    "careerUrl": "https://amplitude.com/careers",
+    "type": "html",
+    "remotePolicy": "remote-friendly"
+  },
+  {
+    "name": "Segment (Twilio)",
+    "careerUrl": "https://www.twilio.com/en-us/company/jobs",
+    "type": "html",
+    "remotePolicy": "remote-first"
+  },
+  {
+    "name": "LaunchDarkly",
+    "careerUrl": "https://launchdarkly.com/careers/",
+    "type": "html",
+    "remotePolicy": "remote-friendly"
+  },
+  {
+    "name": "CircleCI",
+    "careerUrl": "https://circleci.com/careers/jobs/",
+    "type": "html",
+    "remotePolicy": "remote-first"
+  },
+  {
+    "name": "JetBrains",
+    "careerUrl": "https://www.jetbrains.com/careers/jobs/",
+    "type": "html",
+    "remotePolicy": "remote-friendly"
+  },
+  {
+    "name": "Sourcegraph",
+    "careerUrl": "https://boards.greenhouse.io/sourcegraph91",
+    "type": "greenhouse",
+    "remotePolicy": "remote-first"
+  },
+  {
+    "name": "Snyk",
+    "careerUrl": "https://snyk.io/careers/",
+    "type": "html",
+    "remotePolicy": "remote-friendly"
+  },
+  {
+    "name": "SonarSource",
+    "careerUrl": "https://www.sonarsource.com/company/careers/",
+    "type": "html",
+    "remotePolicy": "remote-friendly"
+  },
+  {
+    "name": "Sentry",
+    "careerUrl": "https://sentry.io/careers/",
+    "type": "html",
+    "remotePolicy": "remote-friendly"
+  },
+  {
+    "name": "Kong",
+    "careerUrl": "https://konghq.com/careers",
+    "type": "html",
+    "remotePolicy": "remote-first"
+  },
+  {
+    "name": "Postman",
+    "careerUrl": "https://www.postman.com/company/careers/",
+    "type": "html",
+    "remotePolicy": "remote-friendly"
+  },
+  {
+    "name": "Insomnia (Kong)",
+    "careerUrl": "https://konghq.com/careers",
+    "type": "html",
+    "remotePolicy": "remote-first"
+  },
+  {
+    "name": "Docker",
+    "careerUrl": "https://www.docker.com/careers/",
+    "type": "html",
+    "remotePolicy": "remote-friendly"
+  },
+  {
+    "name": "Pulumi",
+    "careerUrl": "https://www.pulumi.com/careers/",
+    "type": "html",
+    "remotePolicy": "remote-first"
+  },
+  {
+    "name": "Terraform (HashiCorp)",
+    "careerUrl": "https://www.hashicorp.com/careers",
+    "type": "html",
+    "remotePolicy": "remote-friendly"
+  },
+  {
+    "name": "Retool",
+    "careerUrl": "https://retool.com/careers",
+    "type": "html",
+    "remotePolicy": "hybrid"
+  },
+  {
+    "name": "Appsmith",
+    "careerUrl": "https://www.appsmith.com/careers",
+    "type": "html",
+    "remotePolicy": "remote-first"
+  },
+  {
+    "name": "n8n",
+    "careerUrl": "https://n8n.io/careers/",
+    "type": "html",
+    "remotePolicy": "remote-first"
+  },
+  {
+    "name": "Temporal",
+    "careerUrl": "https://temporal.io/careers",
+    "type": "html",
+    "remotePolicy": "remote-first"
+  },
+  {
+    "name": "dbt Labs",
+    "careerUrl": "https://www.getdbt.com/dbt-labs/careers/",
+    "type": "html",
+    "remotePolicy": "remote-first"
+  },
+  {
+    "name": "Airbyte",
+    "careerUrl": "https://airbyte.com/company/careers",
+    "type": "html",
+    "remotePolicy": "remote-first"
+  },
+  {
+    "name": "Fivetran",
+    "careerUrl": "https://www.fivetran.com/careers",
+    "type": "html",
+    "remotePolicy": "remote-friendly"
+  },
+  {
+    "name": "Stitch (Talend)",
+    "careerUrl": "https://www.talend.com/company/careers/",
+    "type": "html",
+    "remotePolicy": "remote-friendly"
+  },
+  {
+    "name": "Chromatic",
+    "careerUrl": "https://www.chromatic.com/company/jobs",
+    "type": "html",
+    "remotePolicy": "remote-first"
+  },
+  {
+    "name": "Storybook (Chromatic)",
+    "careerUrl": "https://www.chromatic.com/company/jobs",
+    "type": "html",
+    "remotePolicy": "remote-first"
+  },
+  {
+    "name": "Cypress",
+    "careerUrl": "https://www.cypress.io/careers",
+    "type": "html",
+    "remotePolicy": "remote-first"
+  },
+  {
+    "name": "Playwright (Microsoft)",
+    "careerUrl": "https://careers.microsoft.com/us/en/search-results",
+    "type": "html",
+    "remotePolicy": "hybrid-remote-friendly"
+  },
+  {
+    "name": "BrowserStack",
+    "careerUrl": "https://www.browserstack.com/careers",
+    "type": "html",
+    "remotePolicy": "hybrid"
+  },
+  {
+    "name": "LambdaTest",
+    "careerUrl": "https://www.lambdatest.com/careers",
+    "type": "html",
+    "remotePolicy": "remote-friendly"
+  },
+  {
+    "name": "Anthropic",
+    "careerUrl": "https://www.anthropic.com/careers",
+    "type": "html",
+    "remotePolicy": "hybrid"
+  },
+  {
+    "name": "OpenAI",
+    "careerUrl": "https://openai.com/careers/",
+    "type": "html",
+    "remotePolicy": "hybrid"
+  },
+  {
+    "name": "Hugging Face",
+    "careerUrl": "https://huggingface.co/jobs",
+    "type": "html",
+    "remotePolicy": "remote-first"
+  },
+  {
+    "name": "Cohere",
+    "careerUrl": "https://cohere.com/careers",
+    "type": "html",
+    "remotePolicy": "remote-friendly"
+  },
+  {
+    "name": "Stability AI",
+    "careerUrl": "https://stability.ai/careers",
+    "type": "html",
+    "remotePolicy": "remote-first"
+  },
+  {
+    "name": "Midjourney",
+    "careerUrl": "https://www.midjourney.com/jobs/",
+    "type": "html",
+    "remotePolicy": "remote-first"
+  },
+  {
+    "name": "Runway",
+    "careerUrl": "https://runwayml.com/careers/",
+    "type": "html",
+    "remotePolicy": "hybrid"
+  },
+  {
+    "name": "Scale AI",
+    "careerUrl": "https://scale.com/careers",
+    "type": "html",
+    "remotePolicy": "hybrid"
+  },
+  {
+    "name": "Weights & Biases",
+    "careerUrl": "https://wandb.ai/site/careers",
+    "type": "html",
+    "remotePolicy": "remote-friendly"
+  },
+  {
+    "name": "Replicate",
+    "careerUrl": "https://replicate.com/about#jobs",
+    "type": "html",
+    "remotePolicy": "remote-first"
+  },
+  {
+    "name": "Groq",
+    "careerUrl": "https://groq.com/careers/",
+    "type": "html",
+    "remotePolicy": "remote-friendly"
+  },
+  {
+    "name": "Together AI",
+    "careerUrl": "https://www.together.ai/careers",
+    "type": "html",
+    "remotePolicy": "remote-friendly"
+  },
+  {
+    "name": "Anyscale",
+    "careerUrl": "https://www.anyscale.com/careers",
+    "type": "html",
+    "remotePolicy": "remote-friendly"
+  },
+  {
+    "name": "Modal",
+    "careerUrl": "https://modal.com/careers",
+    "type": "html",
+    "remotePolicy": "remote-first"
+  },
+  {
+    "name": "Buildkite",
+    "careerUrl": "https://buildkite.com/careers",
+    "type": "html",
+    "remotePolicy": "remote-first"
+  },
+  {
+    "name": "GitKraken",
+    "careerUrl": "https://www.gitkraken.com/careers",
+    "type": "html",
+    "remotePolicy": "remote-friendly"
+  },
+  {
+    "name": "Doppler",
+    "careerUrl": "https://www.doppler.com/careers",
+    "type": "html",
+    "remotePolicy": "remote-first"
+  },
+  {
+    "name": "Courier",
+    "careerUrl": "https://www.courier.com/careers/",
+    "type": "html",
+    "remotePolicy": "remote-first"
+  },
+  {
+    "name": "Novu",
+    "careerUrl": "https://novu.co/careers/",
+    "type": "html",
+    "remotePolicy": "remote-first"
+  },
+  {
+    "name": "Customer.io",
+    "careerUrl": "https://customer.io/careers/",
+    "type": "html",
+    "remotePolicy": "remote-first"
+  },
+  {
+    "name": "Intercom",
+    "careerUrl": "https://www.intercom.com/careers",
+    "type": "html",
+    "remotePolicy": "hybrid"
+  },
+  {
+    "name": "Freshworks",
+    "careerUrl": "https://www.freshworks.com/company/careers/",
+    "type": "html",
+    "remotePolicy": "hybrid"
+  },
+  {
+    "name": "Help Scout",
+    "careerUrl": "https://www.helpscout.com/company/careers/",
+    "type": "html",
+    "remotePolicy": "remote-first"
+  },
+  {
+    "name": "Front",
+    "careerUrl": "https://front.com/careers",
+    "type": "html",
+    "remotePolicy": "hybrid"
+  },
+  {
+    "name": "Gorgias",
+    "careerUrl": "https://www.gorgias.com/about-us/careers",
+    "type": "html",
+    "remotePolicy": "remote-friendly"
+  },
+  {
+    "name": "Close",
+    "careerUrl": "https://www.close.com/careers",
+    "type": "html",
+    "remotePolicy": "remote-first"
+  },
+  {
+    "name": "Mercury",
+    "careerUrl": "https://mercury.com/careers",
+    "type": "html",
+    "remotePolicy": "remote-friendly"
+  },
+  {
+    "name": "Pipe",
+    "careerUrl": "https://pipe.com/careers",
+    "type": "html",
+    "remotePolicy": "remote-friendly"
+  },
+  {
+    "name": "Modern Treasury",
+    "careerUrl": "https://www.moderntreasury.com/careers",
+    "type": "html",
+    "remotePolicy": "remote-friendly"
+  },
+  {
+    "name": "Moov",
+    "careerUrl": "https://moov.io/careers/",
+    "type": "html",
+    "remotePolicy": "remote-first"
+  },
+  {
+    "name": "Superside",
+    "careerUrl": "https://www.superside.com/careers",
+    "type": "html",
+    "remotePolicy": "remote-first"
+  },
+  {
+    "name": "Contra",
+    "careerUrl": "https://contra.com/careers",
+    "type": "html",
+    "remotePolicy": "remote-first"
+  },
+  {
+    "name": "Liveblocks",
+    "careerUrl": "https://liveblocks.io/careers",
+    "type": "html",
+    "remotePolicy": "remote-first"
+  },
+  {
+    "name": "Tiptap",
+    "careerUrl": "https://tiptap.dev/careers",
+    "type": "html",
+    "remotePolicy": "remote-first"
+  },
+  {
+    "name": "Cal.com",
+    "careerUrl": "https://cal.com/jobs",
+    "type": "html",
+    "remotePolicy": "remote-first"
+  },
+  {
+    "name": "Cron (Notion)",
+    "careerUrl": "https://www.notion.so/careers",
+    "type": "html",
+    "remotePolicy": "hybrid"
+  },
+  {
+    "name": "Raycast",
+    "careerUrl": "https://www.raycast.com/jobs",
+    "type": "html",
+    "remotePolicy": "remote-first"
+  },
+  {
+    "name": "Arc Browser",
+    "careerUrl": "https://thebrowser.company/careers/",
+    "type": "html",
+    "remotePolicy": "hybrid"
+  },
+  {
+    "name": "Brave",
+    "careerUrl": "https://brave.com/careers/",
+    "type": "html",
+    "remotePolicy": "remote-first"
+  },
+  {
+    "name": "Vivaldi",
+    "careerUrl": "https://vivaldi.com/jobs/",
+    "type": "html",
+    "remotePolicy": "remote-friendly"
+  },
+  {
+    "name": "Proton",
+    "careerUrl": "https://proton.me/careers",
+    "type": "html",
+    "remotePolicy": "remote-friendly"
+  },
+  {
+    "name": "Bitwarden",
+    "careerUrl": "https://bitwarden.com/careers/",
+    "type": "html",
+    "remotePolicy": "remote-first"
+  },
+  {
+    "name": "NordVPN (Nord Security)",
+    "careerUrl": "https://nordsecurity.com/careers",
+    "type": "html",
+    "remotePolicy": "remote-friendly"
+  },
+  {
+    "name": "ExpressVPN",
+    "careerUrl": "https://www.expressvpn.com/jobs",
+    "type": "html",
+    "remotePolicy": "remote-friendly"
+  },
+  {
+    "name": "Tailscale",
+    "careerUrl": "https://tailscale.com/careers",
+    "type": "html",
+    "remotePolicy": "remote-first"
+  },
+  {
+    "name": "WireGuard",
+    "careerUrl": "https://www.wireguard.com/",
+    "type": "html",
+    "remotePolicy": "remote-first"
+  },
+  {
+    "name": "Zscaler",
+    "careerUrl": "https://www.zscaler.com/careers",
+    "type": "html",
+    "remotePolicy": "remote-friendly"
+  },
+  {
+    "name": "CrowdStrike",
+    "careerUrl": "https://www.crowdstrike.com/careers/",
+    "type": "html",
+    "remotePolicy": "remote-friendly"
+  },
+  {
+    "name": "SentinelOne",
+    "careerUrl": "https://www.sentinelone.com/careers/",
+    "type": "html",
+    "remotePolicy": "remote-friendly"
+  },
+  {
+    "name": "Lacework",
+    "careerUrl": "https://www.lacework.com/company/careers/",
+    "type": "html",
+    "remotePolicy": "remote-friendly"
+  },
+  {
+    "name": "Wiz",
+    "careerUrl": "https://www.wiz.io/careers",
+    "type": "html",
+    "remotePolicy": "hybrid"
+  },
+  {
+    "name": "Orca Security",
+    "careerUrl": "https://orca.security/company/careers/",
+    "type": "html",
+    "remotePolicy": "remote-friendly"
+  },
+  {
+    "name": "Teleport",
+    "careerUrl": "https://goteleport.com/careers/",
+    "type": "html",
+    "remotePolicy": "remote-first"
+  },
+  {
+    "name": "Tailwind Labs",
+    "careerUrl": "https://tailwindcss.com/careers",
+    "type": "html",
+    "remotePolicy": "remote-first"
+  },
+  {
+    "name": "Vercel (Next.js)",
+    "careerUrl": "https://vercel.com/careers",
+    "type": "html",
+    "remotePolicy": "remote-friendly"
+  },
+  {
+    "name": "Remix",
+    "careerUrl": "https://remix.run/careers",
+    "type": "html",
+    "remotePolicy": "remote-first"
+  },
+  {
+    "name": "Svelte (Vercel)",
+    "careerUrl": "https://vercel.com/careers",
+    "type": "html",
+    "remotePolicy": "remote-friendly"
+  },
+  {
+    "name": "Nuxt",
+    "careerUrl": "https://nuxt.com/enterprise",
+    "type": "html",
+    "remotePolicy": "remote-first"
+  },
+  {
+    "name": "VueJobs",
+    "careerUrl": "https://vuejobs.com/",
+    "type": "html",
+    "remotePolicy": "remote-first"
+  },
+  {
+    "name": "Bun",
+    "careerUrl": "https://bun.sh/careers",
+    "type": "html",
+    "remotePolicy": "remote-first"
+  },
+  {
+    "name": "Deno",
+    "careerUrl": "https://deno.com/jobs",
+    "type": "html",
+    "remotePolicy": "remote-first"
+  },
+  {
+    "name": "Expo",
+    "careerUrl": "https://expo.dev/careers",
+    "type": "html",
+    "remotePolicy": "remote-first"
+  },
+  {
+    "name": "Strapi",
+    "careerUrl": "https://strapi.io/careers",
+    "type": "html",
+    "remotePolicy": "remote-first"
+  },
+  {
+    "name": "Payload CMS",
+    "careerUrl": "https://payloadcms.com/careers",
+    "type": "html",
+    "remotePolicy": "remote-first"
+  },
+  {
+    "name": "Ghost",
+    "careerUrl": "https://ghost.org/about/",
+    "type": "html",
+    "remotePolicy": "remote-first"
+  },
+  {
+    "name": "Hashnode",
+    "careerUrl": "https://hashnode.com/careers",
+    "type": "html",
+    "remotePolicy": "remote-first"
+  },
+  {
+    "name": "Dev.to",
+    "careerUrl": "https://dev.to/about",
+    "type": "html",
+    "remotePolicy": "remote-first"
+  },
+  {
+    "name": "Daily.dev",
+    "careerUrl": "https://daily.dev/careers",
+    "type": "html",
+    "remotePolicy": "remote-first"
+  },
+  {
+    "name": "Replit",
+    "careerUrl": "https://replit.com/site/careers",
+    "type": "html",
+    "remotePolicy": "remote-friendly"
+  },
+  {
+    "name": "CodeSandbox",
+    "careerUrl": "https://codesandbox.io/jobs",
+    "type": "html",
+    "remotePolicy": "remote-first"
+  },
+  {
+    "name": "StackBlitz",
+    "careerUrl": "https://stackblitz.com/careers",
+    "type": "html",
+    "remotePolicy": "remote-first"
+  },
+  {
+    "name": "Gitpod",
+    "careerUrl": "https://www.gitpod.io/careers",
+    "type": "html",
+    "remotePolicy": "remote-first"
+  },
+  {
+    "name": "Codespaces (GitHub)",
+    "careerUrl": "https://www.github.careers/careers-home",
+    "type": "html",
+    "remotePolicy": "remote-first"
+  },
+  {
+    "name": "JFrog",
+    "careerUrl": "https://jfrog.com/careers/",
+    "type": "html",
+    "remotePolicy": "remote-friendly"
+  },
+  {
+    "name": "Sonatype",
+    "careerUrl": "https://www.sonatype.com/company/careers",
+    "type": "html",
+    "remotePolicy": "remote-first"
+  },
+  {
+    "name": "Socket",
+    "careerUrl": "https://socket.dev/careers",
+    "type": "html",
+    "remotePolicy": "remote-first"
+  },
+  {
+    "name": "Fathom Analytics",
+    "careerUrl": "https://usefathom.com/about",
+    "type": "html",
+    "remotePolicy": "remote-first"
+  },
+  {
+    "name": "Plausible",
+    "careerUrl": "https://plausible.io/about",
+    "type": "html",
+    "remotePolicy": "remote-first"
+  },
+  {
+    "name": "Pirsch",
+    "careerUrl": "https://pirsch.io/about",
+    "type": "html",
+    "remotePolicy": "remote-first"
+  },
+  {
+    "name": "Umami",
+    "careerUrl": "https://umami.is/careers",
+    "type": "html",
+    "remotePolicy": "remote-first"
+  },
+  {
+    "name": "SimpleAnalytics",
+    "careerUrl": "https://www.simpleanalytics.com/careers",
+    "type": "html",
+    "remotePolicy": "remote-first"
+  },
+  {
+    "name": "Basecamp",
+    "careerUrl": "https://basecamp.com/about/jobs",
+    "type": "html",
+    "remotePolicy": "remote-first"
+  },
+  {
+    "name": "37signals",
+    "careerUrl": "https://37signals.com/jobs",
+    "type": "html",
+    "remotePolicy": "remote-first"
+  },
+  {
+    "name": "ClickUp",
+    "careerUrl": "https://clickup.com/careers",
+    "type": "html",
+    "remotePolicy": "remote-friendly"
+  },
+  {
+    "name": "Coda",
+    "careerUrl": "https://coda.io/careers",
+    "type": "html",
+    "remotePolicy": "remote-friendly"
+  },
+  {
+    "name": "Taskade",
+    "careerUrl": "https://www.taskade.com/jobs",
+    "type": "html",
+    "remotePolicy": "remote-first"
+  },
+  {
+    "name": "Craft",
+    "careerUrl": "https://www.craft.do/careers",
+    "type": "html",
+    "remotePolicy": "remote-friendly"
+  },
+  {
+    "name": "Slite",
+    "careerUrl": "https://slite.com/careers",
+    "type": "html",
+    "remotePolicy": "remote-first"
+  },
+  {
+    "name": "Tettra",
+    "careerUrl": "https://tettra.com/careers/",
+    "type": "html",
+    "remotePolicy": "remote-first"
+  },
+  {
+    "name": "Guru",
+    "careerUrl": "https://www.getguru.com/careers",
+    "type": "html",
+    "remotePolicy": "remote-friendly"
+  },
+  {
+    "name": "Almanac",
+    "careerUrl": "https://almanac.io/careers",
+    "type": "html",
+    "remotePolicy": "remote-first"
+  },
+  {
+    "name": "Liveblocks",
+    "careerUrl": "https://liveblocks.io/careers",
+    "type": "html",
+    "remotePolicy": "remote-first"
+  },
+  {
+    "name": "Tldraw",
+    "careerUrl": "https://tldraw.dev/",
+    "type": "html",
+    "remotePolicy": "remote-first"
+  },
+  {
+    "name": "Excalidraw",
+    "careerUrl": "https://plus.excalidraw.com/",
+    "type": "html",
+    "remotePolicy": "remote-first"
+  },
+  {
+    "name": "GitBook",
+    "careerUrl": "https://www.gitbook.com/about#jobs",
+    "type": "html",
+    "remotePolicy": "remote-first"
+  },
+  {
+    "name": "ReadMe",
+    "careerUrl": "https://readme.com/careers",
+    "type": "html",
+    "remotePolicy": "remote-first"
+  },
+  {
+    "name": "Mintlify",
+    "careerUrl": "https://mintlify.com/careers",
+    "type": "html",
+    "remotePolicy": "remote-first"
+  },
+  {
+    "name": "Swimm",
+    "careerUrl": "https://swimm.io/careers",
+    "type": "html",
+    "remotePolicy": "remote-friendly"
+  },
+  {
+    "name": "Stoplight",
+    "careerUrl": "https://stoplight.io/careers",
+    "type": "html",
+    "remotePolicy": "remote-first"
+  },
+  {
+    "name": "Stainless",
+    "careerUrl": "https://www.stainlessapi.com/careers",
+    "type": "html",
+    "remotePolicy": "remote-first"
+  },
+  {
+    "name": "Speakeasy",
+    "careerUrl": "https://www.speakeasyapi.dev/careers",
+    "type": "html",
+    "remotePolicy": "remote-first"
+  },
+  {
+    "name": "Optic",
+    "careerUrl": "https://www.useoptic.com/careers",
+    "type": "html",
+    "remotePolicy": "remote-first"
+  }
+]
